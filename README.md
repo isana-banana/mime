@@ -46,3 +46,13 @@ python generate.py --checkpoint checkpoints/best.pt --prompt "Bahasa Indonesia a
 ## Important limitations
 
 91K parameters is extremely small. Expect short, repetitive, error-prone text; it will not have the reasoning, factual recall, or instruction-following ability of a modern LLM. Byte-level tokenization handles Indonesian UTF-8 correctly but consumes more context positions than subword tokenization. Training quality depends heavily on corpus quality and size.
+
+
+## Train on GitHub Actions
+
+1. Add your permitted UTF-8 Indonesian corpus as `data/train.txt` (blank lines separate documents). Keep private or sensitive text out of the corpus.
+2. Open the repository's **Actions** tab.
+3. Select **Train MIME-ID 100K**, choose **Run workflow**, set the step count and batch size, then start it.
+4. When the run finishes, download the `mime-id-100k-checkpoints` artifact from that workflow run. It contains `best.pt` and `last.pt`.
+
+The workflow uses a GitHub-hosted CPU runner. Runtime depends on corpus size and step count; GitHub Actions usage limits and billing may apply. The workflow does not start automatically and will fail until `data/train.txt` is present.
