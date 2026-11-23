@@ -1,0 +1,87 @@
+package id.mime.chat;
+
+import android.content.Context;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
+
+/** Small CPU-only inference engine matching model.py (byte-level MIME-ID 100K). */
+final class TinyModel {
+    private static final int V=258, D=64, BLOCK=128, HEADS=4, HD=16;
+    private final float[] tok, pos, fnw, fnb;
+    private final Layer[] layers = new Layer[2];
+    private final Random random = new Random();
+
+    private static final class Layer {
+        float[] n1w,n1b,qw,qb,pw,pb,n2w,n2b,w1,b1,w2,b2;
+    }
+    TinyModel(Context context) throws IOException {
+        DataInputStream in = new DataInputStream(context.getAssets().open("mime100k.bin"));
+        byte[] magic = new byte[8]; in.readFully(magic);
+        if (!Arrays.equals(magic, "MIME100K".getBytes(java.nio.charset.StandardCharsets.US_ASCII))) throw new IOException("Invalid model asset");
+        int count=in.readInt(); if(count!=28) throw new IOException("Unexpected model tensor count: "+count);
+        tok=read(in,258*64); pos=read(in,128*64);
+        for(int i=0;i<2;i++) {
+            Layer l=new Layer();
+            l.n1w=read(in,64); l.n1b=read(in,64); l.qw=read(in,192*64); l.qb=read(in,192);
+            l.pw=read(in,64*64); l.pb=read(in,64); l.n2w=read(in,64); l.n2b=read(in,64);
+            l.w1=read(in,128*64); l.b1=read(in,128); l.w2=read(in,64*128); l.b2=read(in,64); layers[i]=l;
+        }
+        fnw=read(in,64); fnb=read(in,64); in.close();
+    }
+    private static float[] read(DataInputStream in,int n)throws IOException { float[] a=new float[n]; for(int i=0;i<n;i++)a[i]=in.readFloat(); return a; }
+    private static float[] norm(float[] x,int t,float[] w,float[] b) {
+        float mean=0; for(int j=0;j<D;j++)mean+=x[t*D+j]; mean/=D;
+        float var=0; for(int j=0;j<D;j++){float z=x[t*D+j]-mean;var+=z*z;} var/=D;
+        float inv=(float)(1.0/Math.sqrt(var+1e-5)); float[] y=new float[D];
+        for(int j=0;j<D;j++)y[j]=(x[t*D+j]-mean)*inv*w[j]+b[j]; return y;
+    }
+    private static float[] linear(float[] x,int rows,int in,int out,float[] w,float[] b) {
+        float[] y=new float[rows*out];
+        for(int r=0;r<rows;r++)for(int o=0;o<out;o++){float s=b[o];int wi=o*in,xi=r*in;for(int k=0;k<in;k++)s+=x[xi+k]*w[wi+k];y[r*out+o]=s;}
+        return y;
+    }
+    private static float gelu(float x){double c=0.7978845608*(x+0.044715*x*x*x);return (float)(0.5*x*(1.0+Math.tanh(c)));}
+    private float[] forward(int[] ids) {
+        int n=ids.length; float[] x=new float[n*D];
+        for(int t=0;t<n;t++)for(int j=0;j<D;j++)x[t*D+j]=tok[ids[t]*D+j]+pos[t*D+j];
+        for(Layer l:layers) {
+            float[] a=new float[n*D]; for(int t=0;t<n;t++)System.arraycopy(norm(x,t,l.n1w,l.n1b),0,a,t*D,D);
+            float[] qkv=linear(a,n,D,192,l.qw,l.qb); float[] att=new float[n*D];
+            for(int t=0;t<n;t++)for(int h=0;h<HEADS;h++){
+                float[] scores=new float[t+1]; float max=-Float.MAX_VALUE;
+                for(int s=0;s<=t;s++){float dot=0;for(int k=0;k<HD;k++)dot+=qkv[t*192+h*HD+k]*qkv[s*192+D+h*HD+k];scores[s]=dot*0.25f;if(scores[s]>max)max=scores[s];}
+                float sum=0;for(int s=0;s<=t;s++){scores[s]=(float)Math.exp(scores[s]-max);sum+=scores[s];}
+                for(int s=0;s<=t;s++){float p=scores[s]/sum;for(int k=0;k<HD;k++)att[t*D+h*HD+k]+=p*qkv[s*192+2*D+h*HD+k];}
+            }
+            float[] projected=linear(att,n,D,D,l.pw,l.pb); for(int i=0;i<x.length;i++)x[i]+=projected[i];
+            float[] z=new float[n*D];for(int t=0;t<n;t++)System.arraycopy(norm(x,t,l.n2w,l.n2b),0,z,t*D,D);
+            float[] hidden=linear(z,n,D,128,l.w1,l.b1);for(int i=0;i<hidden.length;i++)hidden[i]=gelu(hidden[i]);
+            float[] out=linear(hidden,n,128,D,l.w2,l.b2);for(int i=0;i<x.length;i++)x[i]+=out[i];
+        }
+        float[] last=norm(x,n-1,fnw,fnb), logits=new float[V];
+        for(int v=0;v<V;v++){float s=0;for(int j=0;j<D;j++)s+=last[j]*tok[v*D+j];logits[v]=s;}
+        return logits;
+    }
+    String reply(String prompt,int maxNew,float temperature,int topK) {
+        byte[] bytes=prompt.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        int take=Math.min(bytes.length,BLOCK-1); int[] ids=new int[take+1];ids[0]=256;
+        for(int i=0;i<take;i++)ids[i+1]=bytes[bytes.length-take+i]&255;
+        ArrayList<Byte> output=new ArrayList<>();
+        for(int step=0;step<maxNew;step++) {
+            int start=Math.max(0,ids.length-BLOCK);int[] ctx=Arrays.copyOfRange(ids,start,ids.length);
+            float[] logits=forward(ctx);for(int i=0;i<logits.length;i++)logits[i]/=Math.max(temperature,0.05f);
+            logits[256]=Float.NEGATIVE_INFINITY;logits[257]=Float.NEGATIVE_INFINITY;
+            Integer[] order=new Integer[256];for(int i=0;i<256;i++)order[i]=i;
+            Arrays.sort(order,(a,b)->Float.compare(logits[b],logits[a]));
+            boolean[] allowed=new boolean[256];for(int i=0;i<Math.min(topK,256);i++)allowed[order[i]]=true;
+            float max=logits[order[0]],sum=0;for(int i=0;i<256;i++){if(allowed[i]){logits[i]=(float)Math.exp(logits[i]-max);sum+=logits[i];}else logits[i]=0;}
+            double r=random.nextDouble()*sum;int next=order[0];for(int i=0;i<256;i++)if(allowed[i]){r-=logits[i];if(r<=0){next=i;break;}}
+            ids=Arrays.copyOf(ids,ids.length+1);ids[ids.length-1]=next;output.add((byte)next);
+        }
+        byte[] out=new byte[output.size()];for(int i=0;i<out.length;i++)out[i]=output.get(i);
+        return new String(out,java.nio.charset.StandardCharsets.UTF_8).replace("\u0000","").trim();
+    }
+}
