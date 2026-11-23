@@ -11,6 +11,12 @@ on:
         description: "Batch size"
         required: true
         default: "32"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/train.yml"
+      - "prepare_data.py"
+      - "requirements.txt"
 
 permissions:
   contents: read
@@ -34,16 +40,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Check dataset
+      - name: Prepare Indonesian training corpus
         run: |
-          if [ ! -s data/train.txt ]; then
-            echo "Missing data/train.txt. Add a UTF-8 Indonesian corpus to the repository first."
-            exit 1
-          fi
+          python prepare_data.py --dataset vickyfatrian/vqfat-indo-corpus --config cosmopedia_id --max-documents 50000 --output data/train.txt
 
       - name: Train model
         run: |
-          python train.py --data data/train.txt --steps "${{ inputs.steps }}" --batch-size "${{ inputs.batch_size }}" --device cpu
+          python train.py --data data/train.txt --steps "${{ inputs.steps || '10000' }}" --batch-size "${{ inputs.batch_size || '32' }}" --device cpu
 
       - name: Upload checkpoints
         uses: actions/upload-artifact@v4
