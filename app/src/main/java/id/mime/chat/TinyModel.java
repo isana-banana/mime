@@ -96,7 +96,7 @@ final class TinyModel {
             int cp = decoded.codePointAt(offset);
             offset += Character.charCount(cp);
             if (cp == 0xfffd) continue;
-            if (Character.isISOControl(cp) && cp != '\\n' && cp != '\\t') continue;
+            if (Character.isISOControl(cp) && cp != '\n' && cp != '\t') continue;
             clean.appendCodePoint(cp);
         }
         return clean.toString().trim();
