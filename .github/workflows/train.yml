@@ -1,0 +1,54 @@
+name: Train MIME-ID 100K
+
+on:
+  workflow_dispatch:
+    inputs:
+      steps:
+        description: "Training steps"
+        required: true
+        default: "10000"
+      batch_size:
+        description: "Batch size"
+        required: true
+        default: "32"
+
+permissions:
+  contents: read
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Check dataset
+        run: |
+          if [ ! -s data/train.txt ]; then
+            echo "Missing data/train.txt. Add a UTF-8 Indonesian corpus to the repository first."
+            exit 1
+          fi
+
+      - name: Train model
+        run: |
+          python train.py --data data/train.txt --steps "${{ inputs.steps }}" --batch-size "${{ inputs.batch_size }}" --device cpu
+
+      - name: Upload checkpoints
+        uses: actions/upload-artifact@v4
+        with:
+          name: mime-id-100k-checkpoints
+          path: checkpoints/*.pt
+          if-no-files-found: error
+          retention-days: 30
