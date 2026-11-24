@@ -1,4 +1,4 @@
-name: Train MIME-ID 300K
+name: Train MIME-ID 300K and Build Android APK
 
 on:
   workflow_dispatch:
@@ -11,12 +11,16 @@ on:
         description: "Batch size"
         required: true
         default: "32"
+  push:
+    branches: [experiment/mime-id-300k]
+    paths:
+      - ".github/workflows/train.yml"
 
 permissions:
   contents: read
 
 jobs:
-  train:
+  train-and-build:
     runs-on: ubuntu-latest
     timeout-minutes: 360
     steps:
@@ -29,20 +33,46 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Prepare curated Indonesian conversation corpus
+      - name: Prepare audited synthetic Indonesian corpus
         run: |
-          python prepare_data.py --output data/train.txt
+          python prepare_data.py --synthetic-only --output data/train.txt
+          test -s data/train.txt
       - name: Train 300K model
         run: |
           python train.py --data data/train.txt --steps "${{ inputs.steps || '6000' }}" --batch-size "${{ inputs.batch_size || '32' }}" --device cpu
-      - name: Upload checkpoints
+      - name: Verify trained checkpoint and UTF-8 generation
+        run: |
+          python test_model.py --checkpoint checkpoints/best.pt --expected-step "${{ inputs.steps || '6000' }}"
+      - name: Export model for Android
+        run: |
+          mkdir -p app/src/main/assets
+          python export_model.py checkpoints/best.pt app/src/main/assets/mime300k.bin
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.9
+      - name: Build debug APK
+        run: gradle --no-daemon assembleDebug
+      - name: Upload training checkpoints
         uses: actions/upload-artifact@v4
         with:
           name: mime-id-300k-checkpoints
           path: checkpoints/*.pt
+          if-no-files-found: error
+          retention-days: 30
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: mime-chat-300k-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 30
