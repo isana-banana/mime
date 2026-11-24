@@ -9,7 +9,7 @@ DATA = Path("data/synthetic")
 OUT = Path("audit/synthetic_report.json")
 ALLOWED_STYLES = {"casual_aku_kamu", "casual_saya_anda", "casual_gue_lo"}
 RISKY = re.compile(r"\b(dokter|obat|dosis|gejala|penyakit|demam|hamil|investasi|saham|pinjaman|pajak|hukum|kontrak|asuransi|utang|kredit|kebakaran|racun|senjata|nyontek)\b", re.I)
-SPECIFIC = re.compile(r"(?:\bRp\.?\s?[\d.,]+|\b\d[\d.,]*\s?(?:rb|ribu|jt|juta)\b|\b(?:Jl\.?|Jalan)\s+[A-Z])", re.I)
+SPECIFIC = re.compile(r"(?:\bRp\.?\s?[\d.,]+|\b\d[\d.,]*\s?(?:rb|ribu|jt|juta)\b|\b(?:Jl\.?|Jalan)\s+[A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+)*\s+(?:No\.?\s*)?\d+)", re.I)
 FAKE_PERSONA = re.compile(
     r"\b(?:aku|saya|gue|gua|gw)\b.{0,90}\b(?:pernah|tadi|kemarin|barusan|nongkrong|mampir|"
     r"menjemput|jemput|mengantar|antar|datang ke|berangkat|sedang makan|lagi makan|di kantor|di warung|"
