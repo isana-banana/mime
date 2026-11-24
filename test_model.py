@@ -32,7 +32,7 @@ def generate(model, prompt, max_new_tokens=100, temperature=0.75, top_k=40):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--checkpoint", default="checkpoints/best.pt")
-    parser.add_argument("--expected-step", type=int, default=6000)
+    parser.add_argument("--expected-step", type=int, default=1)
     args = parser.parse_args()
     torch.manual_seed(2026)
     ckpt = torch.load(args.checkpoint, map_location="cpu", weights_only=False)
