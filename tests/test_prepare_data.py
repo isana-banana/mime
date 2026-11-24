@@ -1,4 +1,6 @@
 import unittest
+import json
+from pathlib import Path
 from prepare_data import conversation_quality, normalize
 
 class CorpusQualityTests(unittest.TestCase):
@@ -17,6 +19,22 @@ class CorpusQualityTests(unittest.TestCase):
     def test_rejects_risky_topics(self):
         messages = [("user", "Aku sedang sakit."), ("assistant", "Sebaiknya minum obat sesuai dosis.")]
         self.assertEqual(conversation_quality(messages, "lorth_chat"), "risky_topic")
+
+
+    def test_synthetic_seed_format_and_role_order(self):
+        path = Path("data/synthetic/seed_v1.jsonl")
+        rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+        self.assertGreaterEqual(len(rows), 20)
+        self.assertEqual(len({row["id"] for row in rows}), len(rows))
+        for row in rows:
+            self.assertIn(row["style"], {"casual_aku_kamu", "casual_saya_anda", "casual_gue_lo"})
+            roles = [message["role"] for message in row["messages"]]
+            self.assertGreaterEqual(len(roles), 4)
+            self.assertEqual(roles[0], "user")
+            self.assertEqual(roles[-1], "assistant")
+            self.assertTrue(all(role in {"user", "assistant"} for role in roles))
+            self.assertTrue(all(roles[i] != roles[i-1] for i in range(1, len(roles))))
+            self.assertTrue(all(message["content"].strip() for message in row["messages"]))
 
     def test_scenarios_keep_speaker_labels_and_are_not_chat_roles(self):
         doc, reason = normalize([("speaker1", "Halo, kamu sedang apa hari ini?"), ("speaker2", "Aku sedang membaca buku di rumah.")], scenario=True)
