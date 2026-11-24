@@ -8,12 +8,12 @@ from pathlib import Path
 DATA = Path("data/synthetic")
 OUT = Path("audit/synthetic_report.json")
 ALLOWED_STYLES = {"casual_aku_kamu", "casual_saya_anda", "casual_gue_lo"}
-RISKY = re.compile(r"\\b(dokter|obat|dosis|gejala|penyakit|demam|hamil|investasi|saham|pinjaman|pajak|hukum|kontrak|asuransi|utang|kredit|kebakaran|racun|senjata|nyontek)\\b", re.I)
-SPECIFIC = re.compile(r"(?:\\bRp\\.?\\s?[\\d.,]+|\\b\\d[\\d.,]*\\s?(?:rb|ribu|jt|juta)\\b|\\b(?:Jl\\.?|Jalan)\\s+[A-Z])", re.I)
+RISKY = re.compile(r"\b(dokter|obat|dosis|gejala|penyakit|demam|hamil|investasi|saham|pinjaman|pajak|hukum|kontrak|asuransi|utang|kredit|kebakaran|racun|senjata|nyontek)\b", re.I)
+SPECIFIC = re.compile(r"(?:\bRp\.?\s?[\d.,]+|\b\d[\d.,]*\s?(?:rb|ribu|jt|juta)\b|\b(?:Jl\.?|Jalan)\s+[A-Z])", re.I)
 FAKE_PERSONA = re.compile(
-    r"\\b(?:aku|saya|gue|gua|gw)\\b.{0,90}\\b(?:pernah|tadi|kemarin|barusan|nongkrong|mampir|"
+    r"\b(?:aku|saya|gue|gua|gw)\b.{0,90}\b(?:pernah|tadi|kemarin|barusan|nongkrong|mampir|"
     r"menjemput|jemput|mengantar|antar|datang ke|berangkat|sedang makan|lagi makan|di kantor|di warung|"
-    r"di rumahku|rumah saya|temenin|menemani secara langsung)\\b", re.I
+    r"di rumahku|rumah saya|temenin|menemani secara langsung)\b", re.I
 )
 WORD = re.compile(r"[a-zA-ZÀ-ÿ]+(?:['’-][a-zA-ZÀ-ÿ]+)?")
 
@@ -69,7 +69,7 @@ def audit():
             if not isinstance(content, str) or not content.strip():
                 fail("empty_or_invalid_content")
                 continue
-            content = re.sub(r"\\s+", " ", content).strip()
+            content = re.sub(r"\s+", " ", content).strip()
             contents.append(content)
             count = len(WORD.findall(content))
             words += count
@@ -113,7 +113,7 @@ def audit():
         "note": "Structural and heuristic audit only; it cannot certify factual accuracy, usefulness, or naturalness."
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
+    OUT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report, ensure_ascii=False, indent=2))
     return report
 
