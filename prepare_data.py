@@ -47,7 +47,7 @@ BAD_PHRASES = (
     "mengimplementasikan", "mengoptimalisasi", "mengejawantahkan",
 )
 BAD_LABEL = re.compile(
-    r"(^|\\s)(alice|bob|assistant|user|system|mommy|daddy|mr\\.?|mrs\\.?|ms\\.?|miss)\\s*:",
+    r"(^|\s)(alice|bob|assistant|user|system|mommy|daddy|mr\.?|mrs\.?|ms\.?|miss)\s*:",
     re.IGNORECASE,
 )
 WORD_RE = re.compile(r"[A-Za-zÀ-ÿ]+")
@@ -62,19 +62,19 @@ def extract_text(row):
 def clean_text(value):
     value = html.unescape(value)
     value = re.sub(r"<[^>]+>", " ", value)
-    value = re.sub(r"https?://\\S+|www\\.\\S+", " ", value)
-    value = re.sub(r"(?m)^\\s{0,3}#{1,6}\\s*", "", value)
-    value = re.sub(r"[\\x00-\\x08\\x0b\\x0c\\x0e-\\x1f]", " ", value)
+    value = re.sub(r"https?://\S+|www\.\S+", " ", value)
+    value = re.sub(r"(?m)^\s{0,3}#{1,6}\s*", "", value)
+    value = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f]", " ", value)
     value = unicodedata.normalize("NFKC", value)
-    value = re.sub(r"[ \\t]+", " ", value)
-    value = re.sub(r"\\n{3,}", "\\n\\n", value)
+    value = re.sub(r"[ \t]+", " ", value)
+    value = re.sub(r"\n{3,}", "\n\n", value)
     return value.strip()
 
 def split_simple_chunks(text, min_words=8, max_words=55):
-    sentences = re.split(r"(?<=[.!?])\\s+|\\n+", text)
+    sentences = re.split(r"(?<=[.!?])\s+|\n+", text)
     chunks, current, count = [], [], 0
     for sentence in sentences:
-        sentence = sentence.strip(" -•*\\t")
+        sentence = sentence.strip(" -•*\t")
         words = WORD_RE.findall(sentence)
         if not min_words <= len(words) <= 32:
             continue
@@ -110,12 +110,12 @@ def is_everyday_indonesian(text, min_words=8, max_words=55):
     if len({w for w in words if w in COMMON_WORDS}) < 4:
         return False
     # Reject headlines, fragments, and text that looks like a navigation menu.
-    if not re.search(r"[.!?](?:\\s|$)", text):
+    if not re.search(r"[.!?](?:\s|$)", text):
         return False
     if text.count("|") or text.count("•") > 1:
         return False
     # Very long capitalized runs often come from names, titles, or scraped menus.
-    caps = re.findall(r"\\b[A-Z][a-zÀ-ÿ]{2,}\\b", text)
+    caps = re.findall(r"\b[A-Z][a-zÀ-ÿ]{2,}\b", text)
     if sum(text.find(w) > 0 for w in caps) > max(3, n // 12):
         return False
     return True
@@ -147,7 +147,7 @@ def main():
                 if digest in seen:
                     continue
                 seen.add(digest)
-                handle.write(chunk + "\\n\\n")
+                handle.write(chunk + "\n\n")
                 count += 1
                 total_words += len(WORD_RE.findall(chunk))
                 if count >= args.max_documents:
