@@ -1,7 +1,7 @@
 import unittest
 import json
 from pathlib import Path
-from prepare_data import conversation_quality, normalize
+from prepare_data import conversation_quality, normalize, synthetic_candidate_docs
 
 class CorpusQualityTests(unittest.TestCase):
     def test_rejects_fake_personal_experience(self):
@@ -38,6 +38,12 @@ class CorpusQualityTests(unittest.TestCase):
             self.assertTrue(all(role in {"user", "assistant"} for role in roles))
             self.assertTrue(all(roles[i] != roles[i-1] for i in range(1, len(roles))))
             self.assertTrue(all(message["content"].strip() for message in row["messages"]))
+
+    def test_synthetic_candidates_are_formatted_and_nonempty(self):
+        docs = synthetic_candidate_docs(Path("data/synthetic"))
+        self.assertGreaterEqual(len(docs), 300)
+        self.assertTrue(all("Pengguna:" in doc and "Asisten:" in doc for doc in docs))
+        self.assertTrue(all(len(doc) > 40 for doc in docs))
 
     def test_scenarios_keep_speaker_labels_and_are_not_chat_roles(self):
         doc, reason = normalize([("speaker1", "Halo, kamu sedang apa hari ini?"), ("speaker2", "Aku sedang membaca buku di rumah.")], scenario=True)
