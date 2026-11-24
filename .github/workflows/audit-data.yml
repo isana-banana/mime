@@ -1,0 +1,42 @@
+name: Audit MIME-ID corpus
+
+on:
+  push:
+    branches: [experiment/mime-id-300k]
+    paths:
+      - "audit_data.py"
+      - ".github/workflows/audit-data.yml"
+      - "prepare_data.py"
+      - "requirements.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Checkout experiment branch
+        uses: actions/checkout@v4
+        with:
+          ref: experiment/mime-id-300k
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Audit existing corpus filter
+        run: python audit_data.py --max-documents 50000 --samples 80
+      - name: Upload audit report and corpus samples
+        uses: actions/upload-artifact@v4
+        with:
+          name: mime-id-corpus-audit
+          path: audit/
+          if-no-files-found: error
+          retention-days: 30
