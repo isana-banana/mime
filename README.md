@@ -33,6 +33,10 @@ prepare_data.py mengambil hanya pesan user/assistant (system prompt dibuang), me
 
 **Penting:** dataset percakapan publik tersebut tetap bisa berisi teks buatan, salah ketik, atau percakapan yang kurang alami. Filter otomatis hanya membuang noise yang jelas; filter tidak bisa menilai rasa bahasa dengan sempurna. Karena itu workflow audit menghasilkan sampel acak per sumber (audit/samples_by_source.txt), dialog skenario terpisah (audit/scenario_candidates.txt), dan laporan (audit/report.json). Sampel harus ditinjau manusia sebelum training.
 
+## Korpus sintetis orisinal
+
+Batch awal percakapan buatan AI disimpan terpisah di `data/synthetic/seed_v1.jsonl` (25 percakapan). Batch ini belum dipakai training. Aturan pembuatan dan gerbang review ada di `data/synthetic/README.md`. Batch berikutnya hanya ditambahkan setelah format, variasi gaya, duplikasi, dan sampel kualitasnya diperiksa.
+
 ## Audit korpus
 
 Buka tab Actions → Audit MIME-ID conversation corpus → Run workflow. Artefak mime-id-conversation-corpus-audit berisi:
