@@ -31,7 +31,7 @@ def audit():
                 continue
             rows.append((path.name, line_no, row))
 
-    ids, topics, styles, response_hashes = set(), collections.Counter(), collections.Counter(), collections.Counter()
+    ids, topics, styles = set(), collections.Counter(), collections.Counter()\n    response_hashes = collections.defaultdict(list)
     words = 0
     for filename, line_no, row in rows:
         where = {"file": filename, "line": line_no, "id": row.get("id")}
