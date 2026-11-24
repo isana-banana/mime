@@ -1,4 +1,9 @@
-"""Prepare short, readable Indonesian chunks from the existing HF corpus."""
+"""Prepare cleaner, simple Indonesian text from the HF corpus.
+
+This remains a heuristic filter: it reduces obvious English contamination,
+synthetic dialogue labels, and story-translation artifacts, but cannot certify
+that every retained sentence is idiomatic Indonesian.
+"""
 import argparse
 import hashlib
 import html
@@ -7,14 +12,46 @@ import unicodedata
 from pathlib import Path
 from datasets import load_dataset
 
-COMMON_ID = set("""
+STOPWORDS_ID = set("""
 yang dan di ke dari ini itu untuk dengan pada adalah bisa akan sudah belum tidak ada atau juga
 karena kalau jika saat ketika dalam oleh sebagai lebih sangat kita kami mereka saya anda kamu dia
 orang anak rumah hari waktu cara baik baru membuat melakukan menjadi memiliki dapat setiap banyak
 sering masih hingga sampai seperti tentang namun tetapi maka sedang telah punya pergi datang makan minum
 kecil besar satu dua tiga siapa apa bagaimana mengapa kapan tempat nama hidup dunia keluarga teman
-sekolah kerja belajar bermain jalan air makanan cerita
+sekolah kerja belajar bermain jalan air makanan cerita bukan hanya semua sesuatu suatu ingin tahu jadi
+saja lagi masih setelah sebelum selama tanpa antar antara terhadap melalui sekitar pertama kedua beberapa
+cukup mungkin harus boleh perlu sedang pernah selalu kadang hampir kembali mulai gunakan memakai tinggal
+berada terlihat merasa berkata tanya jawab pikir kasih beri ambil cari pakai bantu tahu punya milik
 """.split())
+
+COMMON_ID = STOPWORDS_ID | set("""
+merupakan terdapat bagian bentuk contoh jenis hasil penggunaan dikenal disebut manusia alam benda
+tubuh mata kepala tangan kaki makan minuman keluarga teman anak perempuan laki laki ibu ayah pagi
+siang sore malam rumah sekolah pasar toko jalan kota desa negara dunia hidup pekerjaan uang harga
+barang warna ukuran besar kecil panjang pendek tinggi rendah cepat lambat mudah sulit penting benar
+salah baik buruk baru lama dekat jauh banyak sedikit semua setiap beberapa sendiri bersama orang-orang
+""".split())
+
+ENGLISH_MARKERS = set("""
+the and is are was were be been being of to for from with without this that these those it its
+you your we our they their he she his her as at by on in into about can could would should will
+not do does did have has had if then than but or so because when where what who why how which
+""".split())
+
+TRANSLATION_ARTIFACTS = (
+    "pada suatu ketika", "di sebuah negeri yang jauh", "dahulu kala",
+    "merasa penasaran", "mengangguk dan menjawab", "tersenyum dan berkata",
+    "berseru", "menghujani", "kupu-kupu tersebut", "dengan lembut",
+    "tidak dapat mempercayai matanya", "seperti permainan yang",
+    "dalam cerita kita", "sekarang, saya tahu", "permata tersembunyi",
+    "bukan hanya", "faktanya,", "lagipula,", "kerja bagus dengan",
+)
+
+DIALOGUE_LABEL = re.compile(
+    r"(^|\s)(alice|bob|mommy|daddy|mr\.?|mrs\.?|ms\.?|miss)\s*:",
+    re.IGNORECASE,
+)
+WORD_RE = re.compile(r"[A-Za-zÀ-ÿ]+")
 
 def extract_text(row):
     for key in ("text", "content", "document", "article", "body"):
@@ -42,8 +79,8 @@ def split_simple_chunks(text, min_words, max_words):
     chunks, current, count = [], [], 0
     for sentence in sentences:
         sentence = sentence.strip(" -•\t")
-        words = re.findall(r"[A-Za-zÀ-ÿ]+", sentence)
-        if len(words) < 4 or len(words) > 45:
+        words = WORD_RE.findall(sentence)
+        if len(words) < 5 or len(words) > 38:
             continue
         if count and count + len(words) > max_words:
             if count >= min_words:
@@ -56,16 +93,37 @@ def split_simple_chunks(text, min_words, max_words):
     return chunks
 
 def is_simple_indonesian(text, min_words, max_words):
-    words = re.findall(r"[A-Za-zÀ-ÿ]+", text.lower())
-    if not min_words <= len(words) <= max_words:
+    words = WORD_RE.findall(text.lower())
+    n = len(words)
+    if not min_words <= n <= max_words:
         return False
-    if sum(len(w) >= 13 for w in words) / len(words) > 0.18:
+    if sum(len(w) >= 13 for w in words) / n > 0.12:
         return False
-    if sum(w in COMMON_ID for w in words) < 2:
+    if sum(ch.isdigit() for ch in text) / max(1, len(text)) > 0.08:
         return False
-    if sum(ch.isdigit() for ch in text) / max(1, len(text)) > 0.12:
+    if sum(not ch.isalnum() and not ch.isspace() for ch in text) / max(1, len(text)) > 0.12:
         return False
-    if sum(not ch.isalnum() and not ch.isspace() for ch in text) / max(1, len(text)) > 0.18:
+    if DIALOGUE_LABEL.search(text):
+        return False
+    lower = text.lower()
+    if any(phrase in lower for phrase in TRANSLATION_ARTIFACTS):
+        return False
+    stop_count = sum(w in STOPWORDS_ID for w in words)
+    if stop_count < 5 or stop_count / n < 0.12:
+        return False
+    if len({w for w in words if w in STOPWORDS_ID}) < 4:
+        return False
+    if sum(w in ENGLISH_MARKERS for w in words) / n > 0.025:
+        return False
+    if sum(w in COMMON_ID for w in words) < 7:
+        return False
+    # Reject chunks dominated by named entities / title-cased names.
+    tokens = re.findall(r"\b[A-Z][a-zÀ-ÿ]{2,}\b", text)
+    internal_caps = sum(1 for token in tokens if text.find(token) > 0)
+    if internal_caps > max(2, n // 18):
+        return False
+    # Prefer complete, readable sentences over fragments.
+    if len(re.findall(r"[.!?](?:\s|$)", text)) == 0:
         return False
     return True
 
@@ -97,7 +155,7 @@ def main():
                 seen.add(digest)
                 handle.write(chunk + "\n\n")
                 count += 1
-                total_words += len(chunk.split())
+                total_words += len(WORD_RE.findall(chunk))
                 if count >= args.max_documents:
                     break
             if count >= args.max_documents:
@@ -106,8 +164,8 @@ def main():
                 print(f"Scanned {scanned:,} rows; kept {count:,} chunks")
     if count < 1000:
         raise RuntimeError(f"Only {count} usable chunks from {scanned} rows. "
-            "Check source schema or relax filters.")
-    print(f"Saved {count:,} unique simple Indonesian chunks ({total_words:,} words) "
+            "The source may not contain enough natural Indonesian text.")
+    print(f"Saved {count:,} unique filtered Indonesian chunks ({total_words:,} words) "
         f"from {scanned:,} rows to {output}")
 
 if __name__ == "__main__":
