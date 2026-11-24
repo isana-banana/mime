@@ -31,7 +31,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Audit existing corpus filter
+      - name: Audit everyday Indonesian web corpus
         run: python audit_data.py --max-documents 50000 --samples 80
       - name: Upload audit report and corpus samples
         uses: actions/upload-artifact@v4
