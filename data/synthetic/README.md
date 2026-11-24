@@ -28,3 +28,10 @@ Batch sintetis **tidak otomatis masuk ke training**. Ia harus:
 - disetujui sebelum pipeline training menggunakannya.
 
 Korpus sintetis juga punya risiko menyalin bias atau kesalahan guru AI. Banyak data tidak selalu berarti banyak pengetahuan baru. Tujuan batch ini adalah mengajarkan pola percakapan yang jelas dan natural, bukan mengklaim kebenaran faktual.
+## Batch berikutnya
+
+- `seed_v2.jsonl`: batch lanjutan 25 percakapan.
+- `seed_v3.jsonl`: 50 percakapan, ID `syn0051`–`syn0100`.
+- `seed_v4.jsonl`: 100 percakapan, ID `syn0101`–`syn0200`.
+- Batch v4 sudah diperiksa untuk ID unik dan duplikasi kalimat pembuka; kapitalisasi awal kalimat pada ragam `saya/Anda` dan `gue/lo` juga dirapikan.
+- Semua batch tetap berstatus kandidat dan memerlukan pemeriksaan manual sebelum dipakai untuk training.
