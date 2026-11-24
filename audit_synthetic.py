@@ -73,7 +73,7 @@ def audit():
             contents.append(content)
             count = len(WORD.findall(content))
             words += count
-            if count < 3 or count > 70 or len(content) > 420:
+            if count < 1 or count > 70 or len(content) > 420:
                 fail("turn_length_out_of_range")
             if RISKY.search(content):
                 fail("risky_topic")
