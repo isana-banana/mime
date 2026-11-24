@@ -1,0 +1,38 @@
+name: Test MIME-ID 300K checkpoint
+
+on:
+  workflow_dispatch:
+    inputs:
+      training_run_id:
+        description: "Successful training workflow run ID"
+        required: true
+        default: "45301296739"
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  test-checkpoint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout experiment branch
+        uses: actions/checkout@v4
+        with:
+          ref: experiment/mime-id-300k
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install PyTorch
+        run: pip install "torch>=2.2.0"
+      - name: Download trained checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: mime-id-300k-checkpoints
+          run-id: ${{ inputs.training_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: checkpoints
+      - name: Test checkpoint loading and generation
+        run: python test_model.py --checkpoint checkpoints/best.pt
