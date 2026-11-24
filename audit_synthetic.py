@@ -60,9 +60,9 @@ def audit():
             continue
         message_counts[str(len(messages))] += 1
         style_patterns = {
-            "casual_aku_kamu": re.compile(r"\\b(saya|anda|gue|gua|gw|lo|lu)\\b", re.I),
-            "casual_saya_anda": re.compile(r"\\b(aku|kamu|gue|gua|gw|lo|lu)\\b", re.I),
-            "casual_gue_lo": re.compile(r"\\b(aku|kamu|saya|anda|gw|gua)\\b", re.I),
+            "casual_aku_kamu": re.compile(r"\b(saya|anda|gue|gua|gw|lo|lu)\\b", re.I),
+            "casual_saya_anda": re.compile(r"\b(aku|kamu|gue|gua|gw|lo|lu)\\b", re.I),
+            "casual_gue_lo": re.compile(r"\b(aku|kamu|saya|anda|gw|gua)\\b", re.I),
         }
         pattern = style_patterns.get(style)
         style_text = " ".join(m.get("content", "") for m in messages if isinstance(m, dict) and isinstance(m.get("content"), str))
