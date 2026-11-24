@@ -5,7 +5,9 @@ on:
     branches: [experiment/mime-id-300k]
     paths:
       - "prepare_data.py"
-      - "audit_data.py"\n      - "audit_synthetic.py"\n      - "data/synthetic/**"
+      - "audit_data.py"
+      - "audit_synthetic.py"
+      - "data/synthetic/**"
       - ".github/workflows/audit-data.yml"
       - "requirements.txt"
   workflow_dispatch:
@@ -34,7 +36,8 @@ jobs:
       - name: Check Python syntax and corpus quality rules
         run: |
           python -m py_compile prepare_data.py audit_data.py audit_synthetic.py
-          python -m unittest discover -s tests -v\n          python audit_synthetic.py
+          python -m unittest discover -s tests -v
+          python audit_synthetic.py
       - name: Build candidate conversation corpus
         run: python prepare_data.py --output data/candidate.txt --samples 100
       - name: Upload audit report, random samples, and candidate corpus
