@@ -1,67 +1,38 @@
-# MIME-ID 100K
+# MIME-ID 300K
 
-Tiny Indonesian byte-level decoder-only Transformer. This is a learning/research prototype, not a capable modern assistant.
+Eksperimen model bahasa kecil berbahasa Indonesia. Cabang ini terpisah dari MIME-ID 100K dan tidak mengubah model 100K atau APK yang sudah ada.
 
-## Model
+## Rancangan model
 
-- Indonesian-only training corpus
-- 256 UTF-8 byte tokens + BOS + EOS = vocabulary 258
-- Context length: 128
-- Embedding width: 64
-- Transformer layers: 2
-- Attention heads: 4
-- Feed-forward width: 128
-- Tied token embedding and output weights
-- **91,776 trainable parameters** with the default configuration
+- Tokenizer byte UTF-8: 256 byte + BOS + EOS = 258 token
+- Panjang konteks: 128 token
+- Lebar embedding: 96
+- Transformer: 3 layer, 4 attention head
+- Feed-forward: 256 unit
+- Embedding token dan output memakai bobot bersama
+- **298.656 parameter trainable**
 
-`train.py` checks the parameter count and refuses to train if it is outside 50,000–100,000.
+`train.py` memeriksa jumlah parameter dan menghentikan training bila tidak tepat 298.656.
 
-## Setup
+## Korpus Indonesia yang disederhanakan
+
+Sumber awal tetap memakai `vickyfatrian/vqfat-indo-corpus`, konfigurasi `cosmopedia_id`. `prepare_data.py` membersihkan URL, HTML, karakter kontrol, dan format Markdown sederhana; memecah teks panjang menjadi potongan 15–90 kata; menyaring kalimat terlalu panjang, angka/simbol berlebihan, dan kata sangat panjang; memprioritaskan kosakata umum Bahasa Indonesia; serta menghapus duplikasi.
+
+Fokusnya bahasa sehari-hari: percakapan dan penjelasan sederhana, keluarga, sekolah, rumah, kegiatan, tempat, cerita, dan pengetahuan umum. Filter ini heuristik ringan, bukan pemeriksa tata bahasa, sehingga sebagian teks formal atau kurang alami mungkin masih lolos.
+
+## Jalankan lokal
 
 ```bash
-python -m venv .venv
-# Linux/macOS:
-source .venv/bin/activate
-# Windows:
-# .venv\Scripts\activate
 pip install -r requirements.txt
+python prepare_data.py --max-documents 50000
+python train.py --data data/train.txt --steps 6000
+python generate.py --checkpoint checkpoints/best.pt --prompt "Halo, apa kabar?"
 ```
 
-Put a UTF-8 Indonesian corpus at `data/train.txt`. Separate documents with blank lines. See `data/README.md`.
+## Training GitHub Actions
 
-## Train
+Buka tab **Actions**, pilih **Train MIME-ID 300K**, lalu **Run workflow**. Default: 6.000 langkah dan batch size 32. Setelah berhasil, unduh artefak `mime-id-300k-checkpoints` berisi `best.pt` dan `last.pt`. Workflow berjalan di CPU GitHub-hosted runner; waktu bergantung pada antrean dan beban runner, dengan batas waktu job 6 jam.
 
-```bash
-python train.py --data data/train.txt --steps 10000
-```
+Model 300K tetap sangat kecil dibandingkan LLM modern. Peningkatan parameter dan korpus yang lebih sederhana belum menjamin jawaban akurat atau kemampuan mengikuti instruksi. Ini model eksperimen, bukan asisten produksi.
 
-Useful options: `--batch-size`, `--learning-rate`, `--eval-interval`, and `--device cpu|cuda|mps|auto`.
-
-## Generate
-
-```bash
-python generate.py --checkpoint checkpoints/best.pt --prompt "Bahasa Indonesia adalah"
-```
-
-## Important limitations
-
-91K parameters is extremely small. Expect short, repetitive, error-prone text; it will not have the reasoning, factual recall, or instruction-following ability of a modern LLM. Byte-level tokenization handles Indonesian UTF-8 correctly but consumes more context positions than subword tokenization. Training quality depends heavily on corpus quality and size.
-
-
-## Train on GitHub Actions
-
-1. Add your permitted UTF-8 Indonesian corpus as `data/train.txt` (blank lines separate documents). Keep private or sensitive text out of the corpus.
-2. Open the repository's **Actions** tab.
-3. Select **Train MIME-ID 100K**, choose **Run workflow**, set the step count and batch size, then start it.
-4. When the run finishes, download the `mime-id-100k-checkpoints` artifact from that workflow run. It contains `best.pt` and `last.pt`.
-
-The workflow uses a GitHub-hosted CPU runner. Runtime depends on corpus size and step count; GitHub Actions usage limits and billing may apply. The workflow does not start automatically and will fail until `data/train.txt` is present.
-
-
-## Fully automated corpus preparation
-
-The GitHub Actions workflow can fetch a bounded Indonesian pretraining corpus directly from Hugging Face at runtime; no manual `data/train.txt` upload is required. It currently streams up to 50,000 documents from the `cosmopedia_id` configuration of [VQFat Indonesian Corpus](https://huggingface.co/datasets/vickyfatrian/vqfat-indo-corpus), then runs 10,000 CPU training steps by default.
-
-Dataset attribution: Vicky Fatrian, *VQFat Indonesian Corpus* (2026). Its C-UDA terms permit AI/ML training and require attribution; see the dataset card and license before reusing or redistributing corpus material. This workflow uses the pretraining subset only, not the separate Aurora instruction subset.
-
-The workflow is configured for manual dispatch and automatic runs when its workflow, data-preparation script, or requirements change on `main`. Check the Actions tab for run status and download the `mime-id-100k-checkpoints` artifact after a successful run. GitHub-hosted runners are CPU-only here, and GitHub Actions quotas/billing may apply.
+Periksa kartu dataset dan ketentuan lisensi/atribusi sumber sebelum mendistribusikan ulang teks hasil ekstraksi.
