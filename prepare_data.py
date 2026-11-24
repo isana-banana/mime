@@ -122,8 +122,8 @@ def is_everyday_indonesian(text, min_words=8, max_words=55):
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("--dataset", default="uonlp/CulturaX")
-    p.add_argument("--config", default="id")
+    p.add_argument("--dataset", default="vickyfatrian/vqfat-indo-corpus")
+    p.add_argument("--config", default="cosmopedia_id")
     p.add_argument("--split", default="train")
     p.add_argument("--max-documents", type=int, default=50000)
     p.add_argument("--min-words", type=int, default=8)
