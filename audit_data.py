@@ -13,6 +13,8 @@ def main():
     p.add_argument("--dataset", default="vickyfatrian/vqfat-indo-corpus")
     p.add_argument("--config", default="cosmopedia_id")
     p.add_argument("--max-documents", type=int, default=50000)
+    p.add_argument("--min-words", type=int, default=15)
+    p.add_argument("--max-words", type=int, default=90)
     p.add_argument("--samples", type=int, default=100)
     args = p.parse_args()
     print(f"Auditing {args.dataset} / {args.config}")
@@ -22,9 +24,9 @@ def main():
     for row in stream:
         scanned += 1
         raw = clean_text(extract_text(row))
-        for chunk in split_simple_chunks(raw, 8, 55):
+        for chunk in split_simple_chunks(raw, args.min_words, args.max_words):
             considered += 1
-            if not is_everyday_indonesian(chunk, 8, 55):
+            if not is_everyday_indonesian(chunk, args.min_words, args.max_words):
                 continue
             key = chunk.lower()
             if key in seen:
