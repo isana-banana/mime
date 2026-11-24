@@ -19,11 +19,11 @@ RISKY_TOPIC = re.compile(
     re.I,
 )
 ASSISTANT_PHYSICAL = re.compile(
-    r"\\b(gw|gue|gua|aku|saya)\\b.{0,90}\\b(ke sana|datang|nyampe|temenin|jemput|antar|"
-    r"bikinin|di kos|di rumah|lagi nunggu|lagi di sini|chat pagi-pagi|sampe sana|standby)\\b",
+    r"\b(gw|gue|gua|aku|saya)\b.{0,90}\b(ke sana|datang|nyampe|temenin|jemput|antar|"
+    r"bikinin|di kos|di rumah|lagi nunggu|lagi di sini|chat pagi-pagi|sampe sana|standby)\b",
     re.I,
 )
-REPETITIVE_CASUAL = re.compile(r"\\b(gas|santai aja|wkwk|mantap|cuy|bre)\\b", re.I)
+REPETITIVE_CASUAL = re.compile(r"\b(gas|santai aja|wkwk|mantap|cuy|bre)\b", re.I)
 
 
 def clean(value):
