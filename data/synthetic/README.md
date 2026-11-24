@@ -35,3 +35,4 @@ Korpus sintetis juga punya risiko menyalin bias atau kesalahan guru AI. Banyak d
 - `seed_v4.jsonl`: 100 percakapan, ID `syn0101`–`syn0200`.
 - Batch v4 sudah diperiksa untuk ID unik dan duplikasi kalimat pembuka; kapitalisasi awal kalimat pada ragam `saya/Anda` dan `gue/lo` juga dirapikan.
 - Semua batch tetap berstatus kandidat dan memerlukan pemeriksaan manual sebelum dipakai untuk training.
+- Pemeriksaan tambahan batch v4: satu jawaban pembuka yang berulang diganti agar variasi respons lebih baik.
