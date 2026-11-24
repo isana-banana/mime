@@ -16,7 +16,7 @@ Eksperimen model bahasa kecil berbahasa Indonesia. Cabang ini terpisah dari MIME
 
 ## Korpus Indonesia yang disederhanakan
 
-Sumber korpus diganti ke `uonlp/CulturaX` dengan konfigurasi bahasa Indonesia `id`, yang berisi teks web alami dalam jumlah besar. Ini mengurangi ketergantungan pada teks cerita buatan/terjemahan yang sebelumnya terasa kaku. `prepare_data.py` membersihkan URL, HTML, karakter kontrol, dan format Markdown sederhana; memecah teks panjang menjadi potongan 15–90 kata; menyaring kalimat terlalu panjang, angka/simbol berlebihan, dan kata sangat panjang; memilih potongan pendek dengan kata-kata yang lebih umum dipakai sehari-hari, menolak banyak istilah panjang, campuran bahasa Inggris, pola dialog buatan, dan potongan yang tampak seperti judul/menu; serta menghapus duplikasi.
+Sumber korpus diganti ke `vickyfatrian/vqfat-indo-corpus` dengan konfigurasi `cosmopedia_id`, yang bisa diakses langsung oleh GitHub Actions tanpa akun khusus. Karena sumber ini berisi teks cerita dan penjelasan buatan, penyaringan kalimat dibuat lebih ketat; audit contoh tetap wajib sebelum korpus dipakai. `prepare_data.py` membersihkan URL, HTML, karakter kontrol, dan format Markdown sederhana; memecah teks panjang menjadi potongan 15–90 kata; menyaring kalimat terlalu panjang, angka/simbol berlebihan, dan kata sangat panjang; memilih potongan pendek dengan kata-kata yang lebih umum dipakai sehari-hari, menolak banyak istilah panjang, campuran bahasa Inggris, pola dialog buatan, dan potongan yang tampak seperti judul/menu; serta menghapus duplikasi.
 
 Fokusnya bahasa sehari-hari: rumah, keluarga, teman, sekolah, makanan, perjalanan, kegiatan, dan obrolan sederhana. Karena sumbernya teks web, masih ada kemungkinan teks formal, iklan, atau kalimat kurang alami ikut lolos. Workflow audit menyimpan 100 contoh acak untuk diperiksa sebelum hasilnya dipakai.
 
@@ -24,7 +24,7 @@ Fokusnya bahasa sehari-hari: rumah, keluarga, teman, sekolah, makanan, perjalana
 
 ```bash
 pip install -r requirements.txt
-python prepare_data.py --dataset uonlp/CulturaX --config id --max-documents 50000
+python prepare_data.py --dataset vickyfatrian/vqfat-indo-corpus --config cosmopedia_id --max-documents 50000
 python train.py --data data/train.txt --steps 6000
 python generate.py --checkpoint checkpoints/best.pt --prompt "Halo, apa kabar?"
 ```
