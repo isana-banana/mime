@@ -11,7 +11,7 @@ on:
       training_run_id:
         description: "Successful training workflow run ID"
         required: true
-        default: "45301296739"
+        default: "45306583738"
 
 permissions:
   actions: read
@@ -36,7 +36,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: mime-id-300k-checkpoints
-          run-id: ${{ inputs.training_run_id || '45301296739' }}
+          run-id: ${{ inputs.training_run_id || '45306583738' }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           path: checkpoints
