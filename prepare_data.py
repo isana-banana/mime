@@ -1,168 +1,123 @@
-"""Build a cleaner, everyday Indonesian corpus from natural web text.
-
-The filter favors short, complete sentences and familiar words. It is deliberately
-conservative about noisy pages, lists, machine-like text, and foreign-language
-content. It cannot guarantee grammatical quality; audit samples before training.
-"""
-import argparse
-import hashlib
-import html
-import re
-import unicodedata
+"""Build a quality-first Indonesian conversation corpus from curated open datasets."""
+import argparse, hashlib, html, json, random, re, unicodedata
+from collections import Counter
 from pathlib import Path
 from datasets import load_dataset
 
-STOPWORDS = set("""
-yang dan di ke dari ini itu untuk dengan pada adalah bisa akan sudah belum tidak ada atau juga
-karena kalau jika saat ketika dalam oleh sebagai lebih sangat kita kami mereka saya anda kamu dia
-orang anak rumah hari waktu cara baik baru membuat melakukan menjadi memiliki dapat setiap banyak
-sering masih hingga sampai seperti tentang namun tetapi maka sedang telah punya pergi datang makan minum
-kecil besar satu dua tiga siapa apa bagaimana mengapa kapan tempat nama hidup dunia keluarga teman
-sekolah kerja belajar bermain jalan air makanan cerita bukan hanya semua sesuatu suatu ingin tahu jadi
-saja lagi setelah sebelum selama tanpa antar antara terhadap melalui sekitar pertama kedua beberapa
-cukup mungkin harus boleh perlu pernah selalu kadang hampir kembali mulai gunakan memakai tinggal
-""".split())
+WORD_RE = re.compile(r"[A-Za-zÀ-ÿ]+(?:['’-][A-Za-zÀ-ÿ]+)?")
+SPEAKER_RE = re.compile(r"(?<![\w])([A-Z][A-Za-zÀ-ÿ0-9_-]{1,24}):\s*")
+COMMON = set("""aku saya kamu anda gue gua gw lu lo elu dia mereka kita kami kalian ini itu yang dan di ke dari untuk dengan pada ada enggak nggak gak tidak iya ya bukan bisa mau akan sudah belum lagi aja saja sih dong deh kok nih tuh banget kalau kalo karena jadi tapi atau juga masih udah harus boleh jangan coba tolong makasih maaf apa siapa kapan dimana ke mana bagaimana kenapa gimana berapa hari tadi sekarang nanti besok kemarin pagi siang sore malam waktu jam rumah kerja sekolah kuliah teman keluarga orang anak ibu bapak ayah kakak adik makan minum tidur pergi pulang datang lihat dengar bilang cerita tanya jawab tahu ngerti paham pikir rasa suka cari kasih ambil buat bikin pakai jalan naik turun beli bayar harga murah mahal bagus enak capek senang sedih takut bingung mungkin kayak seperti memang cuma cukup dulu baru setelah sebelum biar supaya ternyata sempat terus""".split())
+BAD = ("pada suatu ketika","di sebuah negeri yang jauh","dapat disimpulkan bahwa","seperti yang telah disebutkan","oleh karena itu dapat","secara komprehensif","mengejawantahkan","paradigma","berdasarkan uraian di atas")
+ENGLISH = set("the and is are was were be been being of to for from with without this that these those you your we our they their he she his her as at by on in into about could would should".split())
 
-COMMON_WORDS = STOPWORDS | set("""
-aku enggak nggak gak kok sih dong deh yuk ayo nih tuh banget bangetnya
-pagi siang sore malam rumah kamar dapur pintu meja kursi motor mobil bus pasar warung toko
-ayah ibu bapak mama kakak adik teman tetangga guru murid anak-anak
-makan nasi sayur buah telur ikan ayam roti kopi teh air tidur bangun mandi masak cuci
-pergi pulang datang jalan duduk berdiri lihat dengar bicara cerita tanya jawab bilang
-senang sedih takut capek lapar haus suka mau cari ambil kasih bantu coba tunggu
-sekarang besok kemarin tadi nanti hari minggu senin selasa rabu kamis jumat sabtu
-""".split())
-
-ENGLISH_MARKERS = set("""
-the and is are was were be been being of to for from with without this that these those
-you your we our they their he she his her as at by on in into about can could would should
-will do does did have has had if then than but or so because when where what who why how
-""".split())
-
-BAD_PHRASES = (
-    "pada suatu ketika", "di sebuah negeri yang jauh", "dahulu kala",
-    "tidak dapat mempercayai matanya", "permata tersembunyi", "dalam cerita kita",
-    "seperti yang telah disebutkan", "dapat disimpulkan bahwa",
-    "oleh karena itu dapat", "secara komprehensif", "paradigma",
-    "mengimplementasikan", "mengoptimalisasi", "mengejawantahkan",
-)
-BAD_LABEL = re.compile(
-    r"(^|\s)(alice|bob|assistant|user|system|mommy|daddy|mr\.?|mrs\.?|ms\.?|miss)\s*:",
-    re.IGNORECASE,
-)
-WORD_RE = re.compile(r"[A-Za-zÀ-ÿ]+")
-
-def extract_text(row):
-    for key in ("text", "content", "document", "article", "body"):
-        value = row.get(key)
-        if isinstance(value, str) and value.strip():
-            return value
-    return ""
-
-def clean_text(value):
-    value = html.unescape(value)
-    value = re.sub(r"<[^>]+>", " ", value)
-    value = re.sub(r"https?://\S+|www\.\S+", " ", value)
-    value = re.sub(r"(?m)^\s{0,3}#{1,6}\s*", "", value)
-    value = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f]", " ", value)
+def clean(value):
+    value = html.unescape(str(value))
+    value = re.sub(r"<[^>]+>|https?://\S+|www\.\S+", " ", value)
     value = unicodedata.normalize("NFKC", value)
-    value = re.sub(r"[ \t]+", " ", value)
-    value = re.sub(r"\n{3,}", "\n\n", value)
-    return value.strip()
+    value = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f]", " ", value)
+    return re.sub(r"\s+", " ", value).strip()
 
-def split_simple_chunks(text, min_words=8, max_words=55):
-    sentences = re.split(r"(?<=[.!?])\s+|\n+", text)
-    chunks, current, count = [], [], 0
-    for sentence in sentences:
-        sentence = sentence.strip(" -•*\t")
-        words = WORD_RE.findall(sentence)
-        if not min_words <= len(words) <= 32:
-            continue
-        if count and count + len(words) > max_words:
-            if count >= min_words:
-                chunks.append(" ".join(current))
-            current, count = [], 0
-        current.append(sentence)
-        count += len(words)
-    if count >= min_words:
-        chunks.append(" ".join(current))
-    return chunks
+def get_messages(row):
+    raw = row.get("conversations") or row.get("messages")
+    if not isinstance(raw, list): return []
+    out = []
+    for item in raw:
+        if not isinstance(item, dict): continue
+        role = str(item.get("role", "")).lower().strip()
+        text = item.get("content", "")
+        if isinstance(text, list):
+            text = " ".join(str(x.get("text", "")) if isinstance(x, dict) else str(x) for x in text)
+        text = clean(text)
+        if role in {"user", "assistant"} and text: out.append((role, text))
+    return out
 
-def is_everyday_indonesian(text, min_words=8, max_words=55):
+def scenario_messages(row):
+    raw = clean(row.get("dialogue", ""))
+    matches = list(SPEAKER_RE.finditer(raw))
+    if len(matches) < 2: return []
+    names, out = [], []
+    for i, match in enumerate(matches):
+        name = match.group(1).lower()
+        if name not in names: names.append(name)
+        end = matches[i+1].start() if i+1 < len(matches) else len(raw)
+        out.append((f"speaker{names.index(name)+1}", clean(raw[match.end():end])))
+    return out
+
+def valid_turn(text):
     words = WORD_RE.findall(text.lower())
-    n = len(words)
-    if not min_words <= n <= max_words:
-        return False
-    lower = text.lower()
-    if BAD_LABEL.search(text) or any(p in lower for p in BAD_PHRASES):
-        return False
-    if sum(len(w) >= 13 for w in words) / n > 0.08:
-        return False
-    if sum(ch.isdigit() for ch in text) / max(1, len(text)) > 0.04:
-        return False
-    if sum(not ch.isalnum() and not ch.isspace() for ch in text) / max(1, len(text)) > 0.09:
-        return False
-    if sum(w in ENGLISH_MARKERS for w in words) / n > 0.015:
-        return False
-    common = sum(w in COMMON_WORDS for w in words)
-    if common < 4 or common / n < 0.16:
-        return False
-    if len({w for w in words if w in COMMON_WORDS}) < 4:
-        return False
-    # Reject headlines, fragments, and text that looks like a navigation menu.
-    if not re.search(r"[.!?](?:\s|$)", text):
-        return False
-    if text.count("|") or text.count("•") > 1:
-        return False
-    # Very long capitalized runs often come from names, titles, or scraped menus.
-    caps = re.findall(r"\b[A-Z][a-zÀ-ÿ]{2,}\b", text)
-    if sum(text.find(w) > 0 for w in caps) > max(3, n // 12):
-        return False
-    return True
+    if not 3 <= len(words) <= 60 or len(text) > 360: return False, "turn_length"
+    low = text.lower()
+    if any(p in low for p in BAD): return False, "formal_story_phrase"
+    if sum(len(w) >= 16 for w in words) > 1: return False, "long_word_noise"
+    if sum(w in ENGLISH for w in words)/len(words) > .18: return False, "english_heavy"
+    if sum(c.isdigit() for c in text)/max(1,len(text)) > .12: return False, "digit_heavy"
+    if sum(not c.isalnum() and not c.isspace() and c not in ".,!?'-" for c in text)/max(1,len(text)) > .08: return False, "symbol_noise"
+    if re.search(r"(.)\1{4,}", text): return False, "character_spam"
+    if len(set(words))/len(words) < .48: return False, "repetitive_words"
+    common = sum(w in COMMON for w in words)
+    if common < 1 or common/len(words) < .08: return False, "low_common_word_ratio"
+    return True, "accepted"
+
+def normalize(messages, scenario=False):
+    if not 2 <= len(messages) <= 16: return None, "turn_count"
+    clean_msgs = []
+    for role, text in messages:
+        text = clean(text)
+        ok, reason = valid_turn(text)
+        if not ok: return None, reason
+        clean_msgs.append((role,text))
+    if len({t.lower() for _,t in clean_msgs}) < 2: return None, "duplicate_turns"
+    if not scenario and not {"user","assistant"}.issubset({r for r,_ in clean_msgs}):
+        return None, "missing_role"
+    lines = []
+    for role,text in clean_msgs:
+        label = ("Pembicara " + role.replace("speaker","")) if scenario else ("Pengguna" if role=="user" else "Asisten")
+        lines.append(f"{label}: {text}")
+    doc = "\n".join(lines)
+    n = len(WORD_RE.findall(doc))
+    if not 12 <= n <= 220: return None, "conversation_word_count"
+    return doc, "accepted"
+
+def source_rows():
+    specs = [
+        ("lorth_chat","LorthGyu/indonesian-chat",None,"chat"),
+        ("lorth_scenarios","LorthGyu/indonesian-dialogue-scenarios",None,"scenario"),
+        ("daruokta_chat","daruokta/t5gemma2-indonesia-chat-formatted","chat_multiturn","chat"),
+    ]
+    for name, repo, config, kind in specs:
+        print(f"Loading {name}: {repo} {config or ''}")
+        ds = load_dataset(repo, config, split="train") if config else load_dataset(repo, split="train")
+        for row in ds:
+            yield name, kind, scenario_messages(row) if kind=="scenario" else get_messages(row)
 
 def main():
-    p = argparse.ArgumentParser()
-    p.add_argument("--dataset", default="vickyfatrian/vqfat-indo-corpus")
-    p.add_argument("--config", default="cosmopedia_id")
-    p.add_argument("--split", default="train")
-    p.add_argument("--max-documents", type=int, default=50000)
-    p.add_argument("--min-words", type=int, default=8)
-    p.add_argument("--max-words", type=int, default=55)
-    p.add_argument("--output", default="data/train.txt")
-    args = p.parse_args()
+    p=argparse.ArgumentParser()
+    p.add_argument("--output",default="data/train.txt")
+    p.add_argument("--samples",type=int,default=100)
+    p.add_argument("--seed",type=int,default=20261124)
+    a=p.parse_args()
+    accepted=[]; seen=set(); stats=Counter(); by_source={}
+    for source,kind,messages in source_rows():
+        stats[f"{source}.rows"]+=1
+        doc,reason=normalize(messages,kind=="scenario")
+        stats[f"{source}.{reason}"]+=1
+        if not doc: continue
+        digest=hashlib.sha256(doc.lower().encode()).hexdigest()
+        if digest in seen: stats[f"{source}.duplicate"]+=1; continue
+        seen.add(digest); accepted.append((source,doc)); by_source.setdefault(source,[]).append(doc)
+    if len(accepted)<500: raise RuntimeError(f"Only {len(accepted)} quality conversations survived; refusing to train.")
+    out=Path(a.output); out.parent.mkdir(parents=True,exist_ok=True)
+    out.write_text("\n\n".join(doc for _,doc in accepted)+"\n",encoding="utf-8")
+    audit=Path("audit"); audit.mkdir(exist_ok=True)
+    rng=random.Random(a.seed); samples=[]
+    for source,docs in sorted(by_source.items()):
+        docs=list(docs); rng.shuffle(docs)
+        samples.append(f"===== {source}: {len(docs)} accepted =====")
+        for i,doc in enumerate(docs[:a.samples],1): samples.append(f"\n[{i}]\n{doc}")
+    (audit/"samples_by_source.txt").write_text("\n".join(samples)+"\n",encoding="utf-8")
+    report={"corpus_type":"multi_turn_indonesian_conversation","sources":["LorthGyu/indonesian-chat","LorthGyu/indonesian-dialogue-scenarios","daruokta/t5gemma2-indonesia-chat-formatted (chat_multiturn)"],"accepted_conversations":len(accepted),"total_words":sum(len(WORD_RE.findall(d)) for _,d in accepted),"source_and_filter_counts":dict(sorted(stats.items())),"samples_file":"samples_by_source.txt","training_ready":False,"note":"Human review of random samples is required before training."}
+    (audit/"report.json").write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding="utf-8")
+    print(json.dumps(report,ensure_ascii=False,indent=2))
+    print("Candidate corpus created. Review audit/samples_by_source.txt before enabling training.")
 
-    print(f"Streaming natural Indonesian web text: {args.dataset} / {args.config}")
-    stream = load_dataset(args.dataset, args.config, split=args.split, streaming=True)
-    output = Path(args.output)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    seen, count, total_words, scanned = set(), 0, 0, 0
-    with output.open("w", encoding="utf-8") as handle:
-        for row in stream:
-            scanned += 1
-            raw = clean_text(extract_text(row))
-            for chunk in split_simple_chunks(raw, args.min_words, args.max_words):
-                if not is_everyday_indonesian(chunk, args.min_words, args.max_words):
-                    continue
-                digest = hashlib.sha1(chunk.lower().encode("utf-8")).hexdigest()
-                if digest in seen:
-                    continue
-                seen.add(digest)
-                handle.write(chunk + "\n\n")
-                count += 1
-                total_words += len(WORD_RE.findall(chunk))
-                if count >= args.max_documents:
-                    break
-            if count >= args.max_documents:
-                break
-            if scanned % 10000 == 0:
-                print(f"Scanned {scanned:,} pages; kept {count:,} chunks")
-    if count < 1000:
-        raise RuntimeError(
-            f"Only {count} usable chunks from {scanned} pages. "
-            "Check dataset access/config or review the filter."
-        )
-    print(f"Saved {count:,} unique everyday Indonesian chunks ({total_words:,} words) "
-          f"from {scanned:,} pages to {output}")
-
-if __name__ == "__main__":
-    main()
+if __name__=="__main__": main()
