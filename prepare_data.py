@@ -59,7 +59,7 @@ def valid_turn(text):
     return True, "accepted"
 
 def normalize(messages, scenario=False):
-    if not 2 <= len(messages) <= 16: return None, "turn_count"
+    if not 2 <= len(messages) <= 48: return None, "turn_count"
     clean_msgs = []
     for role, text in messages:
         text = clean(text)
@@ -75,7 +75,7 @@ def normalize(messages, scenario=False):
         lines.append(f"{label}: {text}")
     doc = "\n".join(lines)
     n = len(WORD_RE.findall(doc))
-    if not 12 <= n <= 220: return None, "conversation_word_count"
+    if not 12 <= n <= 600: return None, "conversation_word_count"
     return doc, "accepted"
 
 def source_rows():
