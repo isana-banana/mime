@@ -11,11 +11,11 @@ BAD = ("pada suatu ketika","di sebuah negeri yang jauh","dapat disimpulkan bahwa
 ENGLISH = set("the and is are was were be been being of to for from with without this that these those you your we our they their he she his her as at by on in into about could would should".split())
 # Exclude domains where short synthetic answers can teach unsafe or misleading advice.
 RISKY_TOPIC = re.compile(
-    r"\\b(dokter|obat|dosis|gejala|penyakit|demam|bayi|hamil|kesehatan|"
+    r"\b(dokter|obat|dosis|gejala|penyakit|demam|bayi|hamil|kesehatan|"
     r"sakit gigi|panadol|paracetamol|antibiotik|veteriner|kucing sakit|"
-    r investasi|reksa dana|saham|pinjaman|paylater|pajak|hukum|legal|kontrak|"
+    r"investasi|reksa dana|saham|pinjaman|paylater|pajak|hukum|legal|kontrak|"
     r"asuransi|utang|kredit|bunga bank|jaminan|sewa ruko|kebakaran|"
-    r"listrik meledak|racun|bahan kimia|senjata|nyontek|bocoran ujian)\\b".replace("r investasi", "investasi"),
+    r"listrik meledak|racun|bahan kimia|senjata|nyontek|bocoran ujian)\b",
     re.I,
 )
 ASSISTANT_PHYSICAL = re.compile(
