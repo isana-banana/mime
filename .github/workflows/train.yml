@@ -41,7 +41,7 @@ jobs:
           pip install -r requirements.txt
       - name: Prepare everyday Indonesian corpus
         run: |
-          python prepare_data.py --dataset uonlp/CulturaX --config id --max-documents 50000 --min-words 15 --max-words 90 --output data/train.txt
+          python prepare_data.py --dataset vickyfatrian/vqfat-indo-corpus --config cosmopedia_id --max-documents 50000 --min-words 15 --max-words 90 --output data/train.txt
       - name: Train 300K model
         run: |
           python train.py --data data/train.txt --steps "${{ inputs.steps || '6000' }}" --batch-size "${{ inputs.batch_size || '32' }}" --device cpu
