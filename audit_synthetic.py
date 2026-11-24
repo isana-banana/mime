@@ -91,12 +91,17 @@ def audit():
         for msg in messages:
             if isinstance(msg, dict) and msg.get("role") == "assistant":
                 answer = re.sub(r"[^a-zA-ZÀ-ÿ ]", "", msg.get("content", "").lower())
-                response_hashes[hashlib.sha256(answer.encode()).hexdigest()] += 1
+                response_hashes[hashlib.sha256(answer.encode()).hexdigest()].append({"file": filename, "line": line_no, "id": rid, "answer": msg.get("content", "")})
 
     total = len(rows)
     style_counts = dict(styles)
     topic_counts = dict(topics.most_common())
-    repeated_answers = sum(n - 1 for n in response_hashes.values() if n > 1)
+    repeated_answers = sum(len(items) - 1 for items in response_hashes.values() if len(items) > 1)
+    for items in response_hashes.values():
+        if len(items) > 1:
+            first = items[0]
+            for duplicate in items[1:]:
+                issues.append({"file": duplicate["file"], "line": duplicate["line"], "id": duplicate["id"], "issue": f"duplicate_assistant_answer_of_{first['id']}"})
     report = {
         "files": [p.name for p in files],
         "conversation_count": total,
