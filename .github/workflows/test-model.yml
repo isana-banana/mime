@@ -30,14 +30,17 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Install PyTorch
-        run: pip install "torch>=2.2.0"
+      - name: Install CPU-only PyTorch
+        run: pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cpu
       - name: Download trained checkpoint
         uses: actions/download-artifact@v4
         with:
           name: mime-id-300k-checkpoints
-          run-id: ${{ inputs.training_run_id }}
+          run-id: ${{ inputs.training_run_id || '45301296739' }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
           path: checkpoints
+      - name: Verify checkpoint exists
+        run: test -s checkpoints/best.pt
       - name: Test checkpoint loading and generation
         run: python test_model.py --checkpoint checkpoints/best.pt
