@@ -154,9 +154,10 @@ def main():
     p.add_argument("--output",default="data/train.txt")
     p.add_argument("--samples",type=int,default=100)
     p.add_argument("--seed",type=int,default=20261124)
+    p.add_argument("--synthetic-only",action="store_true",help="Use only the audited synthetic conversation candidates.")
     a=p.parse_args()
     accepted=[]; seen=set(); stats=Counter(); by_source={}; scenario_docs=[]
-    for source,kind,messages in source_rows():
+    for source,kind,messages in ([] if a.synthetic_only else source_rows()):
         stats[f"{source}.rows"]+=1
         doc,reason=normalize(messages,kind=="scenario")
         if not doc:
