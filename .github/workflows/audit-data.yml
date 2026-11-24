@@ -32,7 +32,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Audit everyday Indonesian web corpus
-        run: python audit_data.py --dataset vickyfatrian/vqfat-indo-corpus --config cosmopedia_id --max-documents 50000 --samples 80
+        run: python audit_data.py --dataset vickyfatrian/vqfat-indo-corpus --config cosmopedia_id --max-documents 50000 --min-words 15 --max-words 90 --samples 100
       - name: Upload audit report and corpus samples
         uses: actions/upload-artifact@v4
         with:
