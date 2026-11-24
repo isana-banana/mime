@@ -44,5 +44,7 @@ jobs:
           path: |
             audit/
             data/candidate.txt
+            data/synthetic/seed_v1.jsonl
+            data/synthetic/README.md
           if-no-files-found: error
           retention-days: 30
