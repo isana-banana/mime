@@ -66,7 +66,7 @@ def audit():
         }
         pattern = style_patterns.get(style)
         style_text = " ".join(m.get("content", "") for m in messages if isinstance(m, dict) and isinstance(m.get("content"), str))
-        if pattern and len(pattern.findall(style_text)) > 1:
+        if pattern and pattern.search(style_text):
             fail("style_pronoun_mismatch")
         roles = [m.get("role") if isinstance(m, dict) else None for m in messages]
         if roles[0] != "user" or roles[-1] != "assistant" or any(
