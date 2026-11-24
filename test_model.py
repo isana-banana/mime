@@ -1,4 +1,5 @@
 """Smoke-test a trained MIME-ID checkpoint and report generated text quality signals."""
+# This test runs on push and can also be launched manually from GitHub Actions.
 import argparse
 import math
 import torch
