@@ -31,7 +31,7 @@ Sumber:
 
 prepare_data.py mengambil hanya pesan user/assistant (system prompt dibuang), menjaga urutan percakapan, menyeragamkan label pembicara, menyaring teks rusak/berulang/campur bahasa berlebihan, dan menghapus duplikasi. Dari sumber LorthGyu, contoh bergaya formal sengaja dilewati; yang diprioritaskan adalah gaya santai dan campuran. Dataset dialog situasional diberi label generik Pembicara 1/2 agar nama tokoh tidak menjadi pola utama.
 
-**Penting:** dataset percakapan publik tersebut tetap bisa berisi teks buatan, salah ketik, atau percakapan yang kurang alami. Filter otomatis hanya membuang noise yang jelas; filter tidak bisa menilai rasa bahasa dengan sempurna. Karena itu workflow audit menghasilkan sampel acak per sumber (audit/samples_by_source.txt) dan laporan (audit/report.json). Sampel harus ditinjau manusia sebelum training.
+**Penting:** dataset percakapan publik tersebut tetap bisa berisi teks buatan, salah ketik, atau percakapan yang kurang alami. Filter otomatis hanya membuang noise yang jelas; filter tidak bisa menilai rasa bahasa dengan sempurna. Karena itu workflow audit menghasilkan sampel acak per sumber (audit/samples_by_source.txt), dialog skenario terpisah (audit/scenario_candidates.txt), dan laporan (audit/report.json). Sampel harus ditinjau manusia sebelum training.
 
 ## Audit korpus
 
