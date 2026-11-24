@@ -88,6 +88,10 @@ def source_rows():
         print(f"Loading {name}: {repo} {config or ''}")
         ds = load_dataset(repo, config, split="train") if config else load_dataset(repo, split="train")
         for row in ds:
+            # This project targets everyday speech, so exclude explicitly formal
+            # examples from the mixed-style source instead of diluting casual data.
+            if name == "lorth_chat" and str(row.get("style", "")).lower() == "formal":
+                continue
             yield name, kind, scenario_messages(row) if kind=="scenario" else get_messages(row)
 
 def main():
