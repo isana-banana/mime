@@ -31,7 +31,7 @@ def audit():
                 continue
             rows.append((path.name, line_no, row))
 
-    ids, topics, styles = set(), collections.Counter(), collections.Counter()
+    ids, topics, styles, message_counts = set(), collections.Counter(), collections.Counter(), collections.Counter()
     response_hashes = collections.defaultdict(list)
     words = 0
     for filename, line_no, row in rows:
@@ -58,6 +58,16 @@ def audit():
         if not isinstance(messages, list) or len(messages) < 4 or len(messages) > 16:
             fail("invalid_message_count")
             continue
+        message_counts[str(len(messages))] += 1
+        style_patterns = {
+            "casual_aku_kamu": re.compile(r"\\b(saya|anda|gue|gua|gw|lo|lu)\\b", re.I),
+            "casual_saya_anda": re.compile(r"\\b(aku|kamu|gue|gua|gw|lo|lu)\\b", re.I),
+            "casual_gue_lo": re.compile(r"\\b(aku|kamu|saya|anda|gw|gua)\\b", re.I),
+        }
+        pattern = style_patterns.get(style)
+        style_text = " ".join(m.get("content", "") for m in messages if isinstance(m, dict) and isinstance(m.get("content"), str))
+        if pattern and len(pattern.findall(style_text)) > 1:
+            fail("style_pronoun_mismatch")
         roles = [m.get("role") if isinstance(m, dict) else None for m in messages]
         if roles[0] != "user" or roles[-1] != "assistant" or any(
             roles[i] == roles[i-1] or roles[i] not in {"user", "assistant"}
@@ -111,6 +121,7 @@ def audit():
         "topic_count": len(topics),
         "topic_distribution": topic_counts,
         "style_distribution": style_counts,
+        "message_count_distribution": dict(message_counts),
         "exact_repeated_assistant_answers": repeated_answers,
         "issue_count": len(issues),
         "issues": issues[:250],
