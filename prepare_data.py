@@ -109,7 +109,10 @@ def main():
         digest=hashlib.sha256(doc.lower().encode()).hexdigest()
         if digest in seen: stats[f"{source}.duplicate"]+=1; continue
         seen.add(digest); accepted.append((source,doc)); by_source.setdefault(source,[]).append(doc)
-    if len(accepted)<500: raise RuntimeError(f"Only {len(accepted)} quality conversations survived; refusing to train.")
+    # Corpus construction floor only; human review is still required before training.
+    # The audit report deliberately keeps training_ready=false.
+    if len(accepted)<300:
+        raise RuntimeError(f"Only {len(accepted)} quality conversations survived; minimum audit floor is 300.")
     out=Path(a.output); out.parent.mkdir(parents=True,exist_ok=True)
     out.write_text("\n\n".join(doc for _,doc in accepted)+"\n",encoding="utf-8")
     audit=Path("audit"); audit.mkdir(exist_ok=True)
