@@ -117,6 +117,38 @@ def source_rows():
     for row in scenarios:
         yield "lorth_scenarios", "scenario", scenario_messages(row)
 
+def synthetic_candidate_docs(data_dir=Path("data/synthetic")):
+    """Format synthetic JSONL conversations as candidates, never as approved training data."""
+    docs, seen_ids = [], set()
+    for path in sorted(Path(data_dir).glob("*.jsonl")):
+        for line_no, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            rid = row.get("id")
+            messages = row.get("messages")
+            if not isinstance(rid, str) or not rid or rid in seen_ids:
+                raise ValueError(f"Invalid or duplicate synthetic id in {path.name}:{line_no}: {rid!r}")
+            seen_ids.add(rid)
+            if not isinstance(messages, list) or len(messages) < 4 or len(messages) > 16:
+                raise ValueError(f"Invalid synthetic message count in {path.name}:{line_no}")
+            roles = [m.get("role") if isinstance(m, dict) else None for m in messages]
+            if roles[0] != "user" or roles[-1] != "assistant" or any(
+                roles[i] == roles[i-1] or roles[i] not in {"user", "assistant"}
+                for i in range(1, len(roles))
+            ):
+                raise ValueError(f"Invalid synthetic role order in {path.name}:{line_no}")
+            lines = []
+            for message in messages:
+                content = clean(message.get("content", ""))
+                if not content or len(WORD_RE.findall(content)) > 70 or len(content) > 420:
+                    raise ValueError(f"Invalid synthetic turn in {path.name}:{line_no}")
+                label = "Pengguna" if message["role"] == "user" else "Asisten"
+                lines.append(f"{label}: {content}")
+            docs.append("\n".join(lines))
+    return docs
+
+
 def main():
     p=argparse.ArgumentParser()
     p.add_argument("--output",default="data/train.txt")
@@ -140,8 +172,17 @@ def main():
         digest=hashlib.sha256(doc.lower().encode()).hexdigest()
         if digest in seen: stats[f"{source}.duplicate"]+=1; continue
         seen.add(digest); accepted.append((source,doc)); by_source.setdefault(source,[]).append(doc)
+    synthetic_docs = synthetic_candidate_docs()
+    for doc in synthetic_docs:
+        digest=hashlib.sha256(doc.lower().encode()).hexdigest()
+        if digest in seen:
+            stats["synthetic_candidate.duplicate"]+=1
+            continue
+        seen.add(digest)
+        accepted.append(("synthetic_candidate",doc))
+        stats["synthetic_candidate.accepted"]+=1
     out=Path(a.output); out.parent.mkdir(parents=True,exist_ok=True)
-    out.write_text("\n\n".join(doc for _,doc in accepted)+"\n",encoding="utf-8")
+    out.write_text("\n\n".join(doc for _,doc in accepted)+"\n" if accepted else "",encoding="utf-8")
     audit=Path("audit"); audit.mkdir(exist_ok=True)
     rng=random.Random(a.seed); samples=[]
     for source,docs in sorted(by_source.items()):
@@ -151,7 +192,7 @@ def main():
     (audit/"samples_by_source.txt").write_text("\n".join(samples)+"\n",encoding="utf-8")
     scenario_path=audit/"scenario_candidates.txt"
     scenario_path.write_text("\n\n".join(scenario_docs)+"\n" if scenario_docs else "",encoding="utf-8")
-    report={"corpus_type":"multi_turn_indonesian_chatbot_conversation","sources":["LorthGyu/indonesian-chat"],"separated_sources":{"LorthGyu/indonesian-dialogue-scenarios":{"count":len(scenario_docs),"file":"scenario_candidates.txt","training_use":"excluded from chatbot base corpus pending role mapping and manual review"}},"excluded_sources":{"LorthGyu/indonesian-chat":"All normalized rows held for manual review after spot checks found fabricated assistant experiences, false physical presence, and unsupported specific claims.","daruokta/t5gemma2-indonesia-chat-formatted (chat_multiturn)":"Excluded pending separate quality review."},"quality_filters":["entire LorthGyu/indonesian-chat source held for manual review; no rows admitted automatically","turn-level Indonesian and noise checks","health/finance/legal/safety/cheating topic exclusion","assistant invented personal experience and physical presence exclusion","assistant unverified exact price/address claims exclusion","repetitive casual catchphrase exclusion"],"accepted_conversations":len(accepted),"total_words":sum(len(WORD_RE.findall(d)) for _,d in accepted),"source_and_filter_counts":dict(sorted(stats.items())),"samples_file":"samples_by_source.txt","training_ready":False,"note":"Automated filters are conservative but cannot guarantee factuality or naturalness; manual sample review is mandatory."}
+    report={"corpus_type":"multi_turn_indonesian_chatbot_conversation","sources":["LorthGyu/indonesian-chat","data/synthetic/*.jsonl"],"candidate_breakdown":{"synthetic_candidate_conversations":len(synthetic_docs),"public_source_accepted_conversations":sum(1 for source,_ in accepted if source != "synthetic_candidate")},"separated_sources":{"LorthGyu/indonesian-dialogue-scenarios":{"count":len(scenario_docs),"file":"scenario_candidates.txt","training_use":"excluded from chatbot base corpus pending role mapping and manual review"}},"excluded_sources":{"LorthGyu/indonesian-chat":"All normalized rows held for manual review after spot checks found fabricated assistant experiences, false physical presence, and unsupported specific claims.","daruokta/t5gemma2-indonesia-chat-formatted (chat_multiturn)":"Excluded pending separate quality review."},"quality_filters":["entire LorthGyu/indonesian-chat source held for manual review; no rows admitted automatically","turn-level Indonesian and noise checks","health/finance/legal/safety/cheating topic exclusion","assistant invented personal experience and physical presence exclusion","assistant unverified exact price/address claims exclusion","repetitive casual catchphrase exclusion"],"accepted_conversations":len(accepted),"total_words":sum(len(WORD_RE.findall(d)) for _,d in accepted),"source_and_filter_counts":dict(sorted(stats.items())),"samples_file":"samples_by_source.txt","training_ready":False,"candidate_status":"candidate_only_manual_review_required","candidate_file":str(out),"training_use":"disabled pending manual review and explicit approval","note":"Automated filters are conservative but cannot guarantee factuality or naturalness; manual sample review is mandatory."}
     (audit/"report.json").write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding="utf-8")
     print(json.dumps(report,ensure_ascii=False,indent=2))
     print("Candidate chatbot corpus created. Scenario dialogues are separated and training remains disabled.")
