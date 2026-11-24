@@ -16,15 +16,15 @@ Eksperimen model bahasa kecil berbahasa Indonesia. Cabang ini terpisah dari MIME
 
 ## Korpus Indonesia yang disederhanakan
 
-Sumber awal tetap memakai `vickyfatrian/vqfat-indo-corpus`, konfigurasi `cosmopedia_id`. `prepare_data.py` membersihkan URL, HTML, karakter kontrol, dan format Markdown sederhana; memecah teks panjang menjadi potongan 15–90 kata; menyaring kalimat terlalu panjang, angka/simbol berlebihan, dan kata sangat panjang; memprioritaskan kosakata umum Bahasa Indonesia; serta menghapus duplikasi.
+Sumber korpus diganti ke `uonlp/CulturaX` dengan konfigurasi bahasa Indonesia `id`, yang berisi teks web alami dalam jumlah besar. Ini mengurangi ketergantungan pada teks cerita buatan/terjemahan yang sebelumnya terasa kaku. `prepare_data.py` membersihkan URL, HTML, karakter kontrol, dan format Markdown sederhana; memecah teks panjang menjadi potongan 15–90 kata; menyaring kalimat terlalu panjang, angka/simbol berlebihan, dan kata sangat panjang; memilih potongan pendek dengan kata-kata yang lebih umum dipakai sehari-hari, menolak banyak istilah panjang, campuran bahasa Inggris, pola dialog buatan, dan potongan yang tampak seperti judul/menu; serta menghapus duplikasi.
 
-Fokusnya bahasa sehari-hari: percakapan dan penjelasan sederhana, keluarga, sekolah, rumah, kegiatan, tempat, cerita, dan pengetahuan umum. Filter ini heuristik ringan, bukan pemeriksa tata bahasa, sehingga sebagian teks formal atau kurang alami mungkin masih lolos.
+Fokusnya bahasa sehari-hari: rumah, keluarga, teman, sekolah, makanan, perjalanan, kegiatan, dan obrolan sederhana. Karena sumbernya teks web, masih ada kemungkinan teks formal, iklan, atau kalimat kurang alami ikut lolos. Workflow audit menyimpan 100 contoh acak untuk diperiksa sebelum hasilnya dipakai.
 
 ## Jalankan lokal
 
 ```bash
 pip install -r requirements.txt
-python prepare_data.py --max-documents 50000
+python prepare_data.py --dataset uonlp/CulturaX --config id --max-documents 50000
 python train.py --data data/train.txt --steps 6000
 python generate.py --checkpoint checkpoints/best.pt --prompt "Halo, apa kabar?"
 ```
