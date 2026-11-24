@@ -1,6 +1,11 @@
 name: Test MIME-ID 300K checkpoint
 
 on:
+  push:
+    branches: [experiment/mime-id-300k]
+    paths:
+      - "test_model.py"
+      - ".github/workflows/test-model.yml"
   workflow_dispatch:
     inputs:
       training_run_id:
