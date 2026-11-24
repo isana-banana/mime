@@ -15,6 +15,7 @@ FAKE_PERSONA = re.compile(
     r"menjemput|jemput|mengantar|antar|datang ke|berangkat|sedang makan|lagi makan|di kantor|di warung|"
     r"di rumahku|rumah saya|temenin|menemani secara langsung)\b", re.I
 )
+TOPIC_FORMAT = re.compile(r"^[a-z0-9]+(?:_[a-z0-9]+)*$")
 WORD = re.compile(r"[a-zA-ZÀ-ÿ]+(?:['’-][a-zA-ZÀ-ÿ]+)?")
 
 def audit():
@@ -50,6 +51,8 @@ def audit():
             fail("missing_topic")
         else:
             topics[topic] += 1
+            if not TOPIC_FORMAT.fullmatch(topic):
+                fail("invalid_topic_format")
         if style not in ALLOWED_STYLES:
             fail("unknown_style")
         else:
