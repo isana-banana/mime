@@ -10,8 +10,8 @@ from prepare_data import clean_text, extract_text, split_simple_chunks, is_every
 def main():
     import argparse
     p = argparse.ArgumentParser()
-    p.add_argument("--dataset", default="uonlp/CulturaX")
-    p.add_argument("--config", default="id")
+    p.add_argument("--dataset", default="vickyfatrian/vqfat-indo-corpus")
+    p.add_argument("--config", default="cosmopedia_id")
     p.add_argument("--max-documents", type=int, default=50000)
     p.add_argument("--samples", type=int, default=100)
     args = p.parse_args()
