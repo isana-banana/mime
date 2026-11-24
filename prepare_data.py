@@ -95,6 +95,10 @@ def normalize(messages, scenario=False):
     return doc, "accepted"
 
 def conversation_quality(messages, source):
+    # Public-source samples still contain fabricated assistant experiences and unsupported claims.
+    # Hold this source for human review rather than admitting any row automatically.
+    if source == "lorth_chat":
+        return "manual_review_required"
     assistant_text = " ".join(text for role, text in messages if role == "assistant")
     full_text = " ".join(text for _, text in messages)
     if RISKY_TOPIC.search(full_text): return "risky_topic"
@@ -136,8 +140,6 @@ def main():
         digest=hashlib.sha256(doc.lower().encode()).hexdigest()
         if digest in seen: stats[f"{source}.duplicate"]+=1; continue
         seen.add(digest); accepted.append((source,doc)); by_source.setdefault(source,[]).append(doc)
-    if not accepted:
-        raise RuntimeError("No chatbot conversations survived; inspect source quality and filters.")
     out=Path(a.output); out.parent.mkdir(parents=True,exist_ok=True)
     out.write_text("\n\n".join(doc for _,doc in accepted)+"\n",encoding="utf-8")
     audit=Path("audit"); audit.mkdir(exist_ok=True)
@@ -149,7 +151,7 @@ def main():
     (audit/"samples_by_source.txt").write_text("\n".join(samples)+"\n",encoding="utf-8")
     scenario_path=audit/"scenario_candidates.txt"
     scenario_path.write_text("\n\n".join(scenario_docs)+"\n" if scenario_docs else "",encoding="utf-8")
-    report={"corpus_type":"multi_turn_indonesian_chatbot_conversation","sources":["LorthGyu/indonesian-chat"],"separated_sources":{"LorthGyu/indonesian-dialogue-scenarios":{"count":len(scenario_docs),"file":"scenario_candidates.txt","training_use":"excluded from chatbot base corpus pending role mapping and manual review"}},"excluded_sources":{"daruokta/t5gemma2-indonesia-chat-formatted (chat_multiturn)":"Excluded pending separate quality review."},"quality_filters":["turn-level Indonesian and noise checks","health/finance/legal/safety/cheating topic exclusion","assistant invented personal experience and physical presence exclusion","assistant unverified exact price/address claims exclusion","repetitive casual catchphrase exclusion"],"accepted_conversations":len(accepted),"total_words":sum(len(WORD_RE.findall(d)) for _,d in accepted),"source_and_filter_counts":dict(sorted(stats.items())),"samples_file":"samples_by_source.txt","training_ready":False,"note":"Automated filters are conservative but cannot guarantee factuality or naturalness; manual sample review is mandatory."}
+    report={"corpus_type":"multi_turn_indonesian_chatbot_conversation","sources":["LorthGyu/indonesian-chat"],"separated_sources":{"LorthGyu/indonesian-dialogue-scenarios":{"count":len(scenario_docs),"file":"scenario_candidates.txt","training_use":"excluded from chatbot base corpus pending role mapping and manual review"}},"excluded_sources":{"LorthGyu/indonesian-chat":"All normalized rows held for manual review after spot checks found fabricated assistant experiences, false physical presence, and unsupported specific claims.","daruokta/t5gemma2-indonesia-chat-formatted (chat_multiturn)":"Excluded pending separate quality review."},"quality_filters":["entire LorthGyu/indonesian-chat source held for manual review; no rows admitted automatically","turn-level Indonesian and noise checks","health/finance/legal/safety/cheating topic exclusion","assistant invented personal experience and physical presence exclusion","assistant unverified exact price/address claims exclusion","repetitive casual catchphrase exclusion"],"accepted_conversations":len(accepted),"total_words":sum(len(WORD_RE.findall(d)) for _,d in accepted),"source_and_filter_counts":dict(sorted(stats.items())),"samples_file":"samples_by_source.txt","training_ready":False,"note":"Automated filters are conservative but cannot guarantee factuality or naturalness; manual sample review is mandatory."}
     (audit/"report.json").write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding="utf-8")
     print(json.dumps(report,ensure_ascii=False,indent=2))
     print("Candidate chatbot corpus created. Scenario dialogues are separated and training remains disabled.")
