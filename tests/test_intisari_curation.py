@@ -34,6 +34,20 @@ class IntisariCurationTests(unittest.TestCase):
         ]}
         self.assertIn("topik_digital", inspect_conversation(item))
 
+    def test_social_media_slang_is_flagged(self):
+        item = {"messages": [
+            {"role": "user", "content": "Aku tidak bisa membuka medsos."},
+            {"role": "assistant", "content": "Coba periksa lagi."},
+        ]}
+        self.assertIn("topik_digital", inspect_conversation(item))
+
+    def test_unfinished_placeholder_is_flagged(self):
+        item = {"messages": [
+            {"role": "user", "content": "Apa kabar?"},
+            {"role": "assistant", "content": "... Aku baik."},
+        ]}
+        self.assertIn("placeholder_dalam_pesan", inspect_conversation(item))
+
     def test_non_alternating_roles_are_flagged(self):
         item = {"messages": [
             {"role": "user", "content": "Saya ingin bertanya."},
