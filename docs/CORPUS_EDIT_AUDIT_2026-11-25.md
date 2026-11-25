@@ -63,3 +63,26 @@ Pemeriksaan isi dilakukan berurutan pada seluruh kelompok percakapan yang tersed
 
 ### Status
 Belum dilakukan pelatihan ulang. Korpus 469 percakapan menjadi bahan untuk pemeriksaan mutu berikutnya, bukan tanda bahwa korpus sudah final.
+
+
+## Refini isi tahap ketiga — 25 November 2026
+
+### Fokus pemeriksaan
+Tahap ini meninjau tiga sisi isi: kewajaran bahasa sehari-hari, ketepatan jawaban terhadap giliran sebelumnya, dan variasi situasi serta cara menjawab. Pemeriksaan kemiripan kata dipakai untuk menemukan calon pengulangan, lalu setiap pasangan diperiksa dari isi percakapannya.
+
+### Perubahan
+- Dari 469 percakapan, 15 percakapan dihapus karena terlalu mirip dengan contoh lain atau masih berpusat pada daftar kontak/nomor anggota.
+- Jumlah korpus sekarang 454 percakapan. Dari jumlah awal 553, total 99 percakapan telah dikeluarkan.
+- Percakapan yang dipertahankan diperbaiki pada bagian yang terasa kaku, terlalu umum, berulang, atau kurang sesuai dengan kehidupan luring.
+- Perbaikan khusus meliputi penggantian istilah "tenggat" menjadi "batas waktu", perbaikan salah tulis "di bekal" menjadi "di tas", penggantian rujukan dokumen digital menjadi kertas, dan penulisan ulang contoh percakapan tentang balasan pesan menjadi percakapan langsung.
+- Topik jam alarm diubah menjadi jam beker; beberapa contoh rapat dan pembagian tugas diubah agar tidak bergantung pada pesan atau jalur komunikasi digital.
+- Jawaban yang mengulang gagasan dalam satu percakapan diperbaiki, termasuk contoh memilih buku dan menyiapkan bekal.
+- Beberapa saran diperjelas agar lebih berguna dan aman, khususnya penyimpanan bekal dan penanganan kertas berisi keterangan pribadi.
+
+### Pengulangan yang ditangani
+Pasangan dengan isi sangat mirip ditinjau, antara lain contoh pintu berderit, penyimpanan bahan di kulkas, daftar belanja, pembagian tugas rumah, sepatu basah, barang bawaan perjalanan, kursi belajar, kebiasaan membaca, portofolio, lampu meja, menu mingguan, tanaman menguning, dan belajar kelompok. Contoh yang lebih lemah dihapus; contoh yang masih memberi sudut pandang berbeda dipertahankan.
+
+### Status pemeriksaan
+Penyuntingan tahap ketiga telah diterapkan pada sembilan berkas korpus. Pemeriksaan struktur dan kata kunci setelah perubahan tetap perlu dijalankan sebelum korpus dipakai untuk training. Penilaian kemiripan otomatis hanya alat bantu; ia tidak membuktikan bahwa semua percakapan sudah unik atau alami.
+
+Belum dilakukan pelatihan ulang.
