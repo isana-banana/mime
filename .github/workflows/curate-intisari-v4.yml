@@ -1,6 +1,13 @@
 name: INTISARI V4 curation audit
 
 on:
+  push:
+    branches:
+      - experiment/intisari-v4-curation
+    paths:
+      - "curate_intisari_v4.py"
+      - ".github/workflows/curate-intisari-v4.yml"
+      - "data/external/intisari_v4/intisari_v4.jsonl"
   workflow_dispatch:
     inputs:
       sample_limit:
