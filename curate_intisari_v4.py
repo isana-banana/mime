@@ -26,7 +26,7 @@ DIGITAL_TERMS = [
     "televisi", "tv", "game", "video game", "game online", "game mobile", "game pc",
     "main game", "pubg", "mobile legends", "iphone", "android", "samsung", "prosesor",
     "processor", "layar", "keyboard", "printer", "mouse", "kamera digital", "zalora",
-    "shopee", "tokopedia", "bukalapak",
+    "shopee", "tokopedia", "bukalapak", "sosmed", "medsos", "login",\n    "password", "username", "data mining", "komputasi", "algoritma", "slide",\n    "presentasi digital", "kode verifikasi", "akun media sosial",
 ]
 DIGITAL_RE = re.compile(
     r"\b(?:" + "|".join(re.escape(x) for x in sorted(DIGITAL_TERMS, key=len, reverse=True)) + r")\b",
@@ -183,7 +183,7 @@ def process(input_path: Path, output_dir: Path, limit: int | None = None) -> dic
                 quarantine.write(json.dumps(record, ensure_ascii=False) + "\n")
                 if len(review_samples) < 500 and any(
                     x in reasons for x in ("campuran_register_awal", "susunan_kalimat_janggal",
-                                           "jawaban_mengulang_pengguna", "pola_teks_mencurigakan", "label_pembicara_di_dalam_teks")
+                                           "jawaban_mengulang_pengguna", "pola_teks_mencurigakan", "label_pembicara_di_dalam_teks", "placeholder_dalam_pesan")
                 ):
                     review_samples.append(record)
             else:
