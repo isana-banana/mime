@@ -3,7 +3,7 @@
 
 This tool NEVER marks a conversation as training-ready. It preserves the raw
 source, normalizes common pronouns, and separates obvious exclusions from
-unreviewed candidates. Semantic quality still requires human review.
+unreviewed candidates. Semantic quality still requires human review.\n# Pipeline revisions are validated by the dedicated curation workflow.
 """
 from __future__ import annotations
 
