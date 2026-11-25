@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -23,6 +24,8 @@ public class MainActivity extends Activity {
     private Button send;
     private TextView status;
     private TinyModel model;
+    // Keep recent turns so follow-up questions are sent with their context.
+    private final ArrayList<String[]> history=new ArrayList<>();
     private final ExecutorService worker=Executors.newSingleThreadExecutor();
 
     @Override public void onCreate(Bundle state) {
@@ -71,16 +74,29 @@ public class MainActivity extends Activity {
         input.setText("");
         ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE))
             .hideSoftInputFromWindow(input.getWindowToken(),0);
-        addMessage("Kamu",text,true); send.setEnabled(false); status.setText("MIME sedang berpikir…");
+        addMessage("Kamu",text,true);
+        history.add(new String[]{"user",text});
+        while(history.size()>8) history.remove(0);
+        StringBuilder prompt=new StringBuilder();
+        for(String[] turn:history) {
+            prompt.append("user".equals(turn[0])?"Pengguna: ":"Asisten: ");
+            prompt.append(turn[1]).append("\n");
+        }
+        prompt.append("Asisten:");
+        final String conversationPrompt=prompt.toString();
+        send.setEnabled(false); status.setText("MIME sedang berpikir…");
         worker.execute(()->{
             String answer;
             try {
-                answer=model.reply("Pengguna: "+text+"\nAsisten:",96,0.8f,40);
+                answer=model.reply(conversationPrompt,160,0.8f,40);
                 if(answer.isEmpty())answer="(Model tidak menghasilkan teks.)";
             } catch(Exception e) {answer="Terjadi kesalahan saat inferensi: "+e.getMessage();}
             final String result=answer;
             runOnUiThread(()->{
-                addMessage("MIME",result,false); send.setEnabled(true);
+                addMessage("MIME",result,false);
+                history.add(new String[]{"assistant",result});
+                while(history.size()>8) history.remove(0);
+                send.setEnabled(true);
                 status.setText("Model siap · offline"); scroll.post(()->scroll.fullScroll(View.FOCUS_DOWN));
             });
         });

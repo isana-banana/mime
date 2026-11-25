@@ -5,14 +5,14 @@ Eksperimen model bahasa kecil berbahasa Indonesia. Cabang ini terpisah dari MIME
 ## Rancangan model
 
 - Tokenizer byte UTF-8: 256 byte + BOS + EOS = 258 token
-- Panjang konteks: 128 token
+- Panjang konteks: 512 token
 - Lebar embedding: 96
 - Transformer: 3 layer, 4 attention head
 - Feed-forward: 256 unit
 - Embedding token dan output memakai bobot bersama
-- **298.656 parameter trainable**
+- **335.520 parameter trainable**
 
-train.py memeriksa jumlah parameter dan menghentikan training bila tidak tepat 298.656.
+train.py memeriksa jumlah parameter dan menghentikan training bila tidak tepat 335.520.
 
 ## Strategi korpus: percakapan dulu
 
@@ -52,6 +52,14 @@ Buka tab Actions → Train MIME-ID 300K → Run workflow. Default: 6.000 langkah
 
 ## Batasan
 
-Model 300K sangat kecil. Panjang konteks 128 byte juga membatasi seberapa banyak percakapan yang bisa dipahami sekaligus. Korpus yang lebih baik dapat memperbaiki gaya bahasa, tetapi tidak otomatis membuat model akurat atau mampu mengikuti instruksi kompleks. Model ini tetap eksperimen, bukan asisten produksi.
+Model 300K sangat kecil. Panjang konteks 512 byte tetap membatasi seberapa banyak percakapan yang bisa dipahami sekaligus. Korpus yang lebih baik dapat memperbaiki gaya bahasa, tetapi tidak otomatis membuat model akurat atau mampu mengikuti instruksi kompleks. Model ini tetap eksperimen, bukan asisten produksi.
 
 Periksa lisensi sumber dan ketentuan atribusi sebelum mendistribusikan ulang korpus hasil gabungan.
+
+
+## Perbaikan konteks percakapan (25 November 2026)
+
+- Aplikasi Android menyimpan hingga 8 giliran pesan terakhir dan mengirim riwayat dengan label `Pengguna:` / `Asisten:` yang sama seperti format korpus.
+- Prompt generasi selalu diakhiri `Asisten:`; pengujian checkpoint memakai format percakapan yang sama, termasuk satu contoh pertanyaan lanjutan.
+- Jendela konteks dinaikkan menjadi 512 byte pada model Python dan mesin Android. Embedding posisi yang lebih besar menaikkan jumlah parameter menjadi 335.520.
+- Kenaikan konteks tidak menjamin pemahaman; hasil sampel generasi tetap perlu ditinjau manusia.

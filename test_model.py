@@ -36,7 +36,7 @@ def main():
     args = parser.parse_args()
     torch.manual_seed(2026)
     ckpt = torch.load(args.checkpoint, map_location="cpu", weights_only=False)
-    assert ckpt["parameter_count"] == 298656, ckpt.get("parameter_count")
+    assert ckpt["parameter_count"] == 335520, ckpt.get("parameter_count")
     assert ckpt["step"] >= args.expected_step, ckpt.get("step")
     assert math.isfinite(ckpt["val_loss"]), ckpt.get("val_loss")
     config = ModelConfig(**ckpt["config"])
@@ -49,7 +49,12 @@ def main():
     assert logits.shape == (1, x.shape[1], 258), logits.shape
     assert torch.isfinite(logits).all(), "Model produced non-finite logits"
     print(f"CHECKPOINT_OK step={ckpt['step']} params={model.parameter_count():,} val_loss={ckpt['val_loss']:.4f}")
-    prompts = ["Halo, apa kabar?", "Saya sedang belajar", "Pada pagi hari", "Apa yang bisa kita lakukan hari ini?"]
+    prompts = [
+        "Pengguna: Halo, apa kabar?\nAsisten:",
+        "Pengguna: Saya sedang belajar membaca.\nAsisten:",
+        "Pengguna: Pagi ini hujan deras.\nAsisten:",
+        "Pengguna: Aku sedang sedih.\nAsisten: Kenapa? Ada yang terjadi?\nPengguna: Aku bertengkar dengan temanku.\nAsisten:",
+    ]
     total_replacements, total_bytes = 0, 0
     for prompt in prompts:
         output, replacements, byte_count = generate(model, prompt)

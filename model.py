@@ -10,7 +10,7 @@ EOS_ID = 257
 @dataclass
 class ModelConfig:
     vocab_size: int = 258
-    block_size: int = 128
+    block_size: int = 512
     n_embd: int = 96
     n_layer: int = 3
     n_head: int = 4

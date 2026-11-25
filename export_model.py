@@ -46,11 +46,11 @@ def main():
     args = parser.parse_args()
 
     checkpoint = torch.load(args.checkpoint, map_location="cpu", weights_only=False)
-    expected = {"vocab_size": 258, "block_size": 128, "n_embd": 96,
+    expected = {"vocab_size": 258, "block_size": 512, "n_embd": 96,
                 "n_layer": 3, "n_head": 4, "n_ff": 256, "dropout": 0.1}
     if checkpoint.get("config") != expected:
         raise ValueError(f"Unexpected model config: {checkpoint.get('config')}")
-    if checkpoint.get("parameter_count") != 298656:
+    if checkpoint.get("parameter_count") != 335520:
         raise ValueError("Checkpoint is not the expected 298,656-parameter model.")
     if int(checkpoint.get("step", 0)) < 1:
         raise ValueError("Checkpoint has no completed training step.")

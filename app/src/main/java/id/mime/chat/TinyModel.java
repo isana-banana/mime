@@ -15,7 +15,7 @@ import java.util.Random;
 
 /** CPU inference engine matching the 298,656-parameter Python model. */
 final class TinyModel {
-    private static final int V=258, D=96, BLOCK=128, HEADS=4, HD=24, FF=256;
+    private static final int V=258, D=96, BLOCK=512, HEADS=4, HD=24, FF=256;
     private final float[] tok, pos, fnw, fnb;
     private final Layer[] layers = new Layer[3];
     private final Random random = new Random();
