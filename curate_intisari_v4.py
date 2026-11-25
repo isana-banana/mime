@@ -22,7 +22,7 @@ DIGITAL_TERMS = [
     "aplikasi", "website", "email", "e-mail", "whatsapp", "instagram",
     "facebook", "twitter", "tiktok", "youtube", "ponsel", "smartphone",
     "gadget", "laptop", "komputer", "wifi", "wi-fi", "browser", "google",
-    "streaming", "online", "chatbot",
+    "streaming", "online", "chatbot", "hp", "handphone", "telepon", "tablet",\n    "televisi", "tv", "game", "video game", "game online", "game mobile", "game pc",\n    "main game", "pubg", "mobile legends", "iphone", "android", "samsung", "prosesor",\n    "processor", "layar", "keyboard", "printer", "mouse", "kamera digital", "zalora",\n    "shopee", "tokopedia", "bukalapak",
 ]
 DIGITAL_RE = re.compile(
     r"\b(?:" + "|".join(re.escape(x) for x in sorted(DIGITAL_TERMS, key=len, reverse=True)) + r")\b",
@@ -121,7 +121,7 @@ def inspect_conversation(item: dict[str, Any]) -> list[str]:
     if SLANG_RE.search(joined) and FORMAL_RE.search(joined):
         reasons.append("campuran_register_awal")
     # Simple anomaly patterns observed during source inspection.
-    if re.search(r"\b(?:mau ngapain apa|yang ngapain sama|apa yang .* apa)\b", joined, re.IGNORECASE):
+    if re.search(r"\b(?:mau ngapain apa|yang ngapain sama|apa yang .* apa|(?:aku|saya|kamu|anda) siapa)\b", joined, re.IGNORECASE):
         reasons.append("susunan_kalimat_janggal")
     return sorted(set(reasons))
 
