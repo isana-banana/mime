@@ -125,3 +125,47 @@ Pemeriksaan isi dilakukan pada seluruh percakapan yang ada pada saat audit, kemu
 
 ### Status
 Korpus **lolos pemeriksaan editorial dan struktur dasar** untuk menjadi bahan uji training berikutnya. Ini bukan klaim bahwa mutu model sudah terbukti. Belum ada training yang dijalankan dalam tahap pemeriksaan ini.
+
+
+## Audit mutu akhir menyeluruh — 25 November 2026
+
+### Hasil pemeriksaan isi
+Seluruh sembilan berkas JSONL dibaca ulang. Pemeriksaan mencakup kewajaran bahasa, kesinambungan jawaban, kecocokan dengan giliran sebelumnya, variasi situasi, pengulangan makna, dan keamanan saran sehari-hari.
+
+### Perbaikan yang diterapkan
+- 24 percakapan diperbaiki pada putaran akhir, lalu dua penyuntingan kecil tambahan dilakukan pada konsistensi kata ganti dan label topik.
+- Petunjuk nasi sisa diperjelas: nasi matang yang dibiarkan lebih dari dua jam pada suhu ruang harus dibuang; untuk berikutnya simpan segera di lemari es. Jawaban tidak mengandalkan bau atau tampilan untuk menentukan keamanan.
+- Percakapan kabel listrik dan kipas diperjelas agar tidak mendorong pembongkaran alat atau penggunaan kabel rusak.
+- Pemeriksaan sepeda diperjelas, terutama bila bunyi berasal dari rem atau rem tidak pakem.
+- Beberapa percakapan tentang menyiapkan bekal, mengatur acara, membagi tugas, dan mengumumkan kegiatan dibuat lebih jelas dan sesuai kehidupan luring.
+- Label topik yang kurang tepat atau masih memakai istilah modern diganti dengan label yang lebih sederhana.
+- Satu percakapan tentang nasi sisa yang terlalu mirip dengan contoh lain dihapus. Contoh lain tentang nasi sisa ditulis ulang agar fokus pada keamanan makanan, bukan mengulang resep.
+
+### Jumlah korpus yang benar
+Pengambilan ulang langsung dari branch menunjukkan jumlah sebelum audit akhir adalah 449 baris, bukan 454 seperti angka pada laporan tahap sebelumnya. Setelah satu contoh berulang dihapus, jumlah akhir adalah **448 percakapan**.
+
+Jumlah per berkas:
+- seed_v1.jsonl: 23
+- seed_v2.jsonl: 22
+- seed_v3.jsonl: 42
+- seed_v4.jsonl: 85
+- seed_v5.jsonl: 82
+- seed_v6.jsonl: 39
+- seed_v7.jsonl: 46
+- seed_v8.jsonl: 70
+- seed_v9.jsonl: 39
+
+Ada ketidaksesuaian enam baris terhadap angka 454 yang pernah dilaporkan: lima baris sudah tidak ada saat pemeriksaan akhir dimulai, dan satu baris dihapus pada audit ini karena pengulangan isi. Riwayat penghapusan lima baris tersebut belum berhasil dipadankan dengan daftar penghapusan pada laporan lama. Karena itu, angka 448 dari berkas aktual dipakai sebagai patokan; catatan penghapusan historis perlu dianggap belum sepenuhnya direkonsiliasi.
+
+### Pemeriksaan struktur dan kata kunci setelah perbaikan
+- 448 baris dan 448 ID unik; tidak ada ID ganda.
+- Susunan pesan dan label gaya valid.
+- Tidak ada campuran aku–kamu dengan saya–Anda dalam satu percakapan.
+- Tidak ditemukan gue/gua/lo/lu/elo/elu.
+- Pemeriksaan kata kunci tidak menemukan istilah komputer atau teknologi digital dalam isi percakapan.
+- Pemeriksaan daftar kosakata sulit yang ditetapkan tidak menemukan istilah sasaran.
+- Tidak ada jawaban asisten yang sama persis, jawaban kosong, atau jawaban yang terlalu pendek menurut batas pemeriksaan.
+- Pemeriksaan kemiripan kata setelah penghapusan contoh berulang tidak menemukan pasangan di atas ambang 0,34.
+
+### Batas hasil
+Pemeriksaan kemiripan kata tidak sama dengan penilaian makna oleh manusia dan tidak membuktikan seluruh contoh sempurna. Percakapan yang tersisa sudah ditinjau secara isi, tetapi tetap disarankan menjalankan evaluasi model terpisah setelah training. Training belum dijalankan.
