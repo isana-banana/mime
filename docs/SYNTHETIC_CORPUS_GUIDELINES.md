@@ -120,3 +120,32 @@ Korpus hanya boleh dinyatakan lolos setelah audit isi dan audit struktur sama-sa
 - Hasil tahap ini berisi 493 percakapan.
 - Audit otomatis setelah penyuntingan: 493 ID unik, tidak ada jawaban asisten yang sama persis, tidak ada pola gue/gua/lo/lu, tidak ada label gaya yang tidak dikenal, urutan peran pesan benar, dan tidak ditemukan istilah teknologi digital pada pemeriksaan kata kunci.
 - Audit otomatis tidak menggantikan pembacaan mutu isi. Percakapan tetap perlu diperiksa dari sisi kewajaran bahasa, ketepatan jawaban, keselamatan, dan variasi.
+
+
+## Pedoman kosakata sederhana — audit lanjutan
+
+- Pilih kata yang lazim diucapkan dalam kehidupan sehari-hari; jangan memakai istilah kantor atau istilah asing jika ada kata yang lebih mudah.
+- Contoh penggantian yang disarankan:
+  - kapasitas → waktu dan tenaga yang tersedia
+  - tenggat → batas waktu
+  - lampiran → halaman atau catatan tambahan
+  - konfirmasi → pastikan kembali
+  - tindak lanjut → langkah berikutnya
+  - audiens → pendengar
+  - kriteria → hal yang menjadi patokan
+  - rasio → bentuk atau perbandingan ukuran
+  - media tanam → tanah
+  - drainase → lubang pembuangan air
+  - prototipe → contoh awal (atau jelaskan benda nyata yang dibuat)
+  - proyek → pekerjaan atau kegiatan (sesuai maksud)
+- Jangan memaksakan penggantian jika kata asal lebih dikenal dan lebih jelas. Kata seperti "jadwal", "kelompok", "anggaran", dan "komunitas" boleh dipakai jika memang paling wajar.
+- Hindari kalimat yang terasa seperti petunjuk kerja. Gunakan bentuk percakapan yang ringkas dan langsung.
+- Jangan mengulang kata yang sama dalam satu jawaban jika bisa dihindari.
+- Setiap penyuntingan harus dibaca ulang agar kata pengganti tidak mengubah arti atau membuat kalimat janggal.
+
+## Ruang lingkup tahap audit lanjutan
+
+- Periksa semua percakapan berdasarkan kelompok ID secara berurutan.
+- Hapus percakapan yang inti pembahasannya adalah komputer, internet, aplikasi, perangkat digital, pesan daring, atau kegiatan digital.
+- Percakapan umum yang bisa berlangsung tanpa alat digital boleh dipertahankan dan disunting agar jelas sebagai kegiatan sehari-hari.
+- Pertahankan istilah yang sudah umum dan diperlukan; tujuan kita mengurangi kosakata sulit, bukan menghapus semua kata yang sedikit panjang.
