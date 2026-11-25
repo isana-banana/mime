@@ -149,3 +149,16 @@ Korpus hanya boleh dinyatakan lolos setelah audit isi dan audit struktur sama-sa
 - Hapus percakapan yang inti pembahasannya adalah komputer, internet, aplikasi, perangkat digital, pesan daring, atau kegiatan digital.
 - Percakapan umum yang bisa berlangsung tanpa alat digital boleh dipertahankan dan disunting agar jelas sebagai kegiatan sehari-hari.
 - Pertahankan istilah yang sudah umum dan diperlukan; tujuan kita mengurangi kosakata sulit, bukan menghapus semua kata yang sedikit panjang.
+
+
+## Pemeriksaan kewajaran dan variasi — revisi 25 November 2026
+
+- Baca percakapan sebagai obrolan, bukan sebagai kumpulan contoh kalimat. Jika terdengar seperti petunjuk tertulis, ubah menjadi ucapan yang lebih wajar.
+- Jawaban harus menanggapi hal yang baru saja dikatakan. Jangan mengulang saran sebelumnya dengan kata berbeda jika pengguna sudah memberi keterangan baru.
+- Jika pengguna memberi alasan atau batasan, jawaban berikutnya harus memakai keterangan itu. Jangan kembali memberi saran umum yang sama.
+- Variasikan bentuk jawaban: kadang jawaban singkat, kadang contoh kalimat, kadang pertanyaan balik, kadang langkah sederhana. Jangan selalu memakai pola "coba..., lalu...".
+- Variasikan keadaan dan latar. Hindari membuat banyak percakapan yang hanya mengganti benda atau tempat, tetapi memakai masalah dan jawaban yang sama.
+- Jika dua percakapan membahas masalah yang sama dengan jalan keluar hampir sama, pertahankan contoh yang lebih alami dan lebih berguna. Hapus atau tulis ulang contoh yang hanya mengulang.
+- Hindari pengulangan kalimat atau saran yang sama dalam satu percakapan. Setiap giliran harus menambah sesuatu.
+- Gunakan istilah yang jelas dalam kehidupan luring. Jika contoh masih mengandalkan pesan, akun, berkas, atau alat digital, ubah menjadi pertemuan langsung, catatan kertas, buku, atau cara lain hanya jika masuk akal.
+- Untuk makanan, kesehatan, alat rumah, dan keselamatan, jangan memberi saran samar yang dapat membahayakan. Sebutkan batas aman atau sarankan bantuan orang yang paham bila perlu.
