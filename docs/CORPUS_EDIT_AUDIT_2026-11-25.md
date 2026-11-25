@@ -86,3 +86,42 @@ Pasangan dengan isi sangat mirip ditinjau, antara lain contoh pintu berderit, pe
 Penyuntingan tahap ketiga telah diterapkan pada sembilan berkas korpus. Pemeriksaan struktur dan kata kunci setelah perubahan tetap perlu dijalankan sebelum korpus dipakai untuk training. Penilaian kemiripan otomatis hanya alat bantu; ia tidak membuktikan bahwa semua percakapan sudah unik atau alami.
 
 Belum dilakukan pelatihan ulang.
+
+
+## Pemeriksaan mutu akhir seluruh korpus — 25 November 2026
+
+### Cakupan
+Seluruh 454 percakapan yang ada sebelum pemeriksaan akhir dibaca berurutan, bukan hanya sampel. Pemeriksaan mencakup kewajaran bahasa, jawaban terhadap giliran sebelumnya, kesinambungan percakapan, keamanan saran, konsistensi kata ganti, topik digital yang mungkin tersisa, pengulangan, dan struktur JSONL.
+
+### Perbaikan akhir
+- Sejumlah kalimat yang masih kaku atau memakai istilah kurang sehari-hari disederhanakan.
+- Rujukan yang berpotensi mengarah ke pesan digital atau kegiatan daring diubah menjadi percakapan langsung, catatan kertas, daftar tertulis, atau kegiatan luring yang masuk akal.
+- Contoh permainan digital diubah menjadi permainan papan.
+- Dua contoh yang sangat dekat tentang membaca peta dan menyusun foto di album dikeluarkan.
+- Tiga contoh lain yang terlalu berulang tentang laci dapur/peralatan dapur dan variasi menu bekal dihapus.
+- Saran tentang nasi sisa diperjelas: nasi perlu segera disimpan di lemari es setelah dingin; nasi yang terlalu lama dibiarkan di suhu ruang sebaiknya dibuang.
+- Saran tentang kabel yang dimainkan kucing diperjelas agar kabel terlindung dan tidak dapat digigit atau ditarik.
+- Satu label gaya percakapan diperbaiki agar sesuai dengan penggunaan saya–Anda.
+
+### Jumlah akhir
+- Sebelum pemeriksaan mutu akhir: 454 percakapan.
+- Dihapus dalam pemeriksaan akhir: 5 percakapan yang berulang atau terlalu dekat.
+- Jumlah akhir: **449 percakapan**.
+- Jumlah awal: 553 percakapan; total yang dikeluarkan sepanjang seluruh tahap: **104 percakapan**.
+- Berkas: seed_v1.jsonl sampai seed_v9.jsonl.
+
+### Pemeriksaan otomatis setelah perbaikan
+- 449 baris dan 449 ID unik; tidak ada ID ganda.
+- Semua pesan memiliki urutan peran user/assistant yang benar dan isi tidak kosong.
+- Semua label gaya dikenali; tidak ditemukan campuran aku–kamu dan saya–Anda dalam satu percakapan.
+- Tidak ditemukan gue/gua/lo/lu/elo/elu.
+- Tidak ditemukan kata kunci komputer atau layanan digital pada daftar pemeriksaan khusus.
+- Tidak ditemukan istilah rumit yang masuk daftar pemeriksaan penyederhanaan tahap ini.
+- Tidak ada jawaban asisten yang sama persis.
+- Perbandingan kemiripan kata menemukan beberapa pasangan yang masih berdekatan, tetapi ditinjau manual dan dipertahankan karena situasi atau kebutuhan yang dibahas berbeda. Perbandingan kata bukan penilaian makna yang sempurna.
+
+### Penilaian dan batasan
+Pemeriksaan isi dilakukan pada seluruh percakapan yang ada pada saat audit, kemudian dilakukan perbaikan dan pemeriksaan ulang. Korpus sekarang lebih bersih dan lebih konsisten dengan sasaran bahasa sehari-hari luring. Namun, ini bukan jaminan bahwa setiap jawaban merupakan satu-satunya jawaban terbaik atau bahwa model yang dilatih darinya pasti lancar. Kualitas keluaran tetap harus diuji setelah training melalui percakapan baru yang tidak ada di korpus.
+
+### Status
+Korpus **lolos pemeriksaan editorial dan struktur dasar** untuk menjadi bahan uji training berikutnya. Ini bukan klaim bahwa mutu model sudah terbukti. Belum ada training yang dijalankan dalam tahap pemeriksaan ini.
