@@ -162,3 +162,14 @@ Korpus hanya boleh dinyatakan lolos setelah audit isi dan audit struktur sama-sa
 - Hindari pengulangan kalimat atau saran yang sama dalam satu percakapan. Setiap giliran harus menambah sesuatu.
 - Gunakan istilah yang jelas dalam kehidupan luring. Jika contoh masih mengandalkan pesan, akun, berkas, atau alat digital, ubah menjadi pertemuan langsung, catatan kertas, buku, atau cara lain hanya jika masuk akal.
 - Untuk makanan, kesehatan, alat rumah, dan keselamatan, jangan memberi saran samar yang dapat membahayakan. Sebutkan batas aman atau sarankan bantuan orang yang paham bila perlu.
+
+
+## Keputusan pemeriksaan mutu akhir — 25 November 2026
+
+- Pemeriksaan akhir harus membaca seluruh percakapan, bukan hanya mengambil sampel.
+- Pasangan yang mirip dari sisi kata perlu dibaca berdampingan. Pertahankan hanya jika keadaan, maksud, atau jawaban yang dibutuhkan memang berbeda.
+- Untuk contoh yang menyebut foto, kamera, film, daftar, catatan, atau pertemuan, pastikan konteksnya kegiatan luring dan bukan penggunaan layanan digital.
+- Untuk contoh makanan sisa, jelaskan penyimpanan yang aman. Jangan menjadikan bau atau tampilan normal sebagai satu-satunya patokan keamanan makanan.
+- Untuk contoh listrik dan alat rumah, utamakan keselamatan dan sarankan bantuan orang yang paham jika pemeriksaan memerlukan pembongkaran.
+- Setelah penyuntingan, periksa kembali jumlah baris, ID unik, urutan peran, gaya kata ganti, istilah digital, dan pengulangan jawaban.
+- Korpus 449 percakapan hasil pemeriksaan 25 November 2026 dinyatakan lolos pemeriksaan editorial dan struktur dasar. Kualitas jawaban model tetap harus diuji setelah training; lolos audit korpus bukan jaminan model akan selalu menjawab dengan baik.
