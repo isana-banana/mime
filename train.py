@@ -71,8 +71,8 @@ def main():
     print(f"Device: {device}")
     print(f"Train documents: {len(train_docs)} | validation documents: {len(val_docs)}")
     print(f"Trainable parameters: {count:,}")
-    if count != 298656:
-        raise RuntimeError(f"Expected exactly 298,656 parameters, got {count:,}.")
+    if count != 335520:
+        raise RuntimeError(f"Expected exactly 335,520 parameters, got {count:,}.")
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=0.01)
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
