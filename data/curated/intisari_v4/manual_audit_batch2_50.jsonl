@@ -36,7 +36,6 @@
 {"id":"intisari-v4-021727","sample_batch":"candidate_random_50_seed_20261128","decision":"rewrite","reason":"Jawaban terlalu umum dan mengulang pernyataan pengguna.","training_ready":false}
 {"id":"intisari-v4-022167","sample_batch":"candidate_random_50_seed_20261128","decision":"discard","reason":"Asisten mengarang memiliki anjing dan menjawab pertanyaan secara keliru.","training_ready":false}
 {"id":"intisari-v4-022190","sample_batch":"candidate_random_50_seed_20261128","decision":"keep_light_edit","reason":"Dialog keluhan produk makanan di supermarket runtut; istilah asing bisa diganti.","training_ready":false}
-{"id":"intisari-v4-032673","sample_batch":"candidate_random_50_seed_20261128","decision":"rewrite","reason":"Sapaan dan tujuan mencari makan dapat dipakai, tetapi banyak salah kata dan asisten mengarang tidak punya uang.","training_ready":false}
 {"id":"intisari-v4-018055","sample_batch":"candidate_random_50_seed_20261128","decision":"discard","reason":"Asisten mengaku baru makan secara pribadi.","training_ready":false}
 {"id":"intisari-v4-008729","sample_batch":"candidate_random_50_seed_20261128","decision":"discard","reason":"Jawaban mengarang sahabat dan membentuk alur yang tidak masuk akal.","training_ready":false}
 {"id":"intisari-v4-042061","sample_batch":"candidate_random_50_seed_20261128","decision":"discard","reason":"Istilah 'jump slot' tidak jelas dan penjelasannya mengarang arti.","training_ready":false}
@@ -48,3 +47,4 @@
 {"id":"intisari-v4-010312","sample_batch":"candidate_random_50_seed_20261128","decision":"rewrite","reason":"Pertanyaan cuaca relevan, tetapi jawaban mengarang keadaan musim saat ini.","training_ready":false}
 {"id":"intisari-v4-022437","sample_batch":"candidate_random_50_seed_20261128","decision":"discard","reason":"Kalimat 'mendapatkan kabupaten' tidak jelas dan jawaban tidak membantu.","training_ready":false}
 {"id":"intisari-v4-001501","sample_batch":"candidate_random_50_seed_20261128","decision":"rewrite","reason":"Topik mencari makan siang dapat dipakai, tetapi asisten mengaku pergi ke warung.","training_ready":false}
+{"id":"intisari-v4-024354","sample_batch":"candidate_random_50_seed_20261128","decision":"discard","reason":"Pertanyaan tentang makanan dijawab dengan ajakan ngopi yang tidak menjawab dan tidak nyambung.","training_ready":false}
