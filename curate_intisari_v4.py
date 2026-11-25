@@ -121,6 +121,8 @@ def inspect_conversation(item: dict[str, Any]) -> list[str]:
         aw = set(re.findall(r"\b\w+\b", a))
         if len(uw) >= 5 and len(uw & aw) / max(1, len(uw)) >= 0.78:
             reasons.append("jawaban_mengulang_pengguna")
+    if SPEAKER_LABEL_RE.search(joined):
+        reasons.append("label_pembicara_di_dalam_teks")
     # Register mixing is not necessarily fatal; mark for review after normalization.
     if SLANG_RE.search(joined) and FORMAL_RE.search(joined):
         reasons.append("campuran_register_awal")
@@ -180,7 +182,7 @@ def process(input_path: Path, output_dir: Path, limit: int | None = None) -> dic
                 quarantine.write(json.dumps(record, ensure_ascii=False) + "\n")
                 if len(review_samples) < 500 and any(
                     x in reasons for x in ("campuran_register_awal", "susunan_kalimat_janggal",
-                                           "jawaban_mengulang_pengguna", "pola_teks_mencurigakan")
+                                           "jawaban_mengulang_pengguna", "pola_teks_mencurigakan", "label_pembicara_di_dalam_teks")
                 ):
                     review_samples.append(record)
             else:
