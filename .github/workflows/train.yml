@@ -1,6 +1,9 @@
 name: Train MIME-ID 300K and Build Android APK
 
 on:
+  push:
+    branches: [experiment/mime-id-300k]
+    paths: ["training-trigger.txt"]
   workflow_dispatch:
     inputs:
       steps:
