@@ -99,3 +99,24 @@ Sebelum korpus dinyatakan siap:
 - lakukan pemeriksaan manusia terhadap kasus yang meragukan.
 
 Korpus hanya boleh dinyatakan lolos setelah audit isi dan audit struktur sama-sama selesai. Keberhasilan pemeriksaan format atau turunnya nilai loss tidak cukup untuk menyatakan mutu percakapan sudah baik.
+
+
+## Penyederhanaan kosakata (revisi 25 November 2026)
+
+- Utamakan kata yang umum dipakai dalam percakapan sehari-hari.
+- Jika ada dua pilihan kata, pilih yang lebih pendek dan lebih mudah dipahami.
+- Hindari istilah asing, istilah kerja kantoran yang rumit, dan istilah teknis jika ada padanan sederhana.
+- Contoh: "prioritaskan" menjadi "dahulukan"; "relevan" menjadi "sesuai"; "konteks" menjadi "keadaan"; "koordinasi" menjadi "mengatur bersama"; "komunikasi" menjadi "bicara"; "kategori" menjadi "kelompok"; "informasi" menjadi "keterangan"; "alternatif" menjadi "pilihan lain".
+- Jangan mengganti kata secara membabi buta. Baca ulang seluruh kalimat agar hasilnya tetap wajar, tidak kaku, dan tidak mengubah maksud.
+- Kalimat boleh pendek, santai, dan tidak selalu baku, selama jelas dan sopan sesuai hubungan antarpenutur.
+- Hindari jawaban seperti buku petunjuk. Tanggapi pertanyaan secara langsung dengan kata-kata yang biasa dipakai orang.
+
+## Catatan penyuntingan tahap pertama
+
+- Korpus awal berisi 553 percakapan.
+- Sebanyak 60 percakapan yang berpusat pada komputer, internet, aplikasi, perangkat digital, dan kegiatan daring dikeluarkan.
+- Percakapan sehari-hari yang hanya menyebut alat digital secara sambil lalu dipertahankan jika dapat diubah menjadi contoh luring yang masuk akal.
+- Seluruh penggunaan gue/gua/lo/lu/elo/elu diubah menjadi aku/kamu; label gaya percakapan disesuaikan.
+- Hasil tahap ini berisi 493 percakapan.
+- Audit otomatis setelah penyuntingan: 493 ID unik, tidak ada jawaban asisten yang sama persis, tidak ada pola gue/gua/lo/lu, tidak ada label gaya yang tidak dikenal, urutan peran pesan benar, dan tidak ditemukan istilah teknologi digital pada pemeriksaan kata kunci.
+- Audit otomatis tidak menggantikan pembacaan mutu isi. Percakapan tetap perlu diperiksa dari sisi kewajaran bahasa, ketepatan jawaban, keselamatan, dan variasi.
