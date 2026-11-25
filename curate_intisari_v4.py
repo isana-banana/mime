@@ -3,7 +3,7 @@
 
 This tool NEVER marks a conversation as training-ready. It preserves the raw
 source, normalizes common pronouns, and separates obvious exclusions from
-unreviewed candidates. Semantic quality still requires human review.\n# Pipeline revisions are validated by the dedicated curation workflow.
+unreviewed candidates. Semantic quality still requires human review.
 """
 from __future__ import annotations
 
@@ -41,6 +41,7 @@ BROKEN_RE = re.compile(r"\b(?:" + "|".join(map(re.escape, sorted(BROKEN_WORDS)))
 REPEATED_WORD_RE = re.compile(r"\b(\w+)(?:\s+\1){1,}\b", re.IGNORECASE)
 LONG_GIBBERISH_RE = re.compile(r"\b[A-Za-z]{19,}\b")
 REPEATED_CHAR_RE = re.compile(r"(.)\1{3,}", re.IGNORECASE)
+SPEAKER_LABEL_RE = re.compile(r"(?im)^\s*(?:aku|kamu|saya|anda|user|assistant)\s*:")
 CASUAL_RE = re.compile(r"\b(gue|gua|gw|lo|lu|elo|elu|aku|kamu)\b", re.IGNORECASE)
 SLANG_RE = re.compile(r"\b(gue|gua|gw|lo|lu|elo|elu)\b", re.IGNORECASE)
 FORMAL_RE = re.compile(r"\b(saya|anda)\b", re.IGNORECASE)
