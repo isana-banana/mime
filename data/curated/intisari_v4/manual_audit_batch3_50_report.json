@@ -1,0 +1,17 @@
+{
+  "dataset": "INTISARI/intisari-indonesian-chat-v4",
+  "source_file": "candidate_unreviewed.jsonl",
+  "candidate_pool_size_at_sampling": 30625,
+  "sample_size": 50,
+  "sampling": "Random sample without replacement; seed 20261129; IDs already reviewed in stage 2 (100) and stage 3 batches 1–2 excluded.",
+  "unique_against_prior_reviews": true,
+  "decisions": {
+    "discard": 22,
+    "rewrite": 20,
+    "keep_light_edit": 6,
+    "discard_structure": 1,
+    "exclude_topic": 1
+  },
+  "training_use": "disabled",
+  "warning": "Labels apply only to this 50-record batch; they are not an estimate of the entire candidate pool."
+}
