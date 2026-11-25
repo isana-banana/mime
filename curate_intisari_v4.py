@@ -42,6 +42,7 @@ REPEATED_WORD_RE = re.compile(r"\b(\w+)(?:\s+\1){1,}\b", re.IGNORECASE)
 LONG_GIBBERISH_RE = re.compile(r"\b[A-Za-z]{19,}\b")
 REPEATED_CHAR_RE = re.compile(r"(.)\1{3,}", re.IGNORECASE)
 SPEAKER_LABEL_RE = re.compile(r"(?im)^\s*(?:aku|kamu|saya|anda|user|assistant)\s*:")
+PLACEHOLDER_RE = re.compile(r"(?:\.{3,}|\[/?(?:nama|jawaban|isi|teks)\])")
 CASUAL_RE = re.compile(r"\b(gue|gua|gw|lo|lu|elo|elu|aku|kamu)\b", re.IGNORECASE)
 SLANG_RE = re.compile(r"\b(gue|gua|gw|lo|lu|elo|elu)\b", re.IGNORECASE)
 FORMAL_RE = re.compile(r"\b(saya|anda)\b", re.IGNORECASE)
@@ -124,6 +125,8 @@ def inspect_conversation(item: dict[str, Any]) -> list[str]:
             reasons.append("jawaban_mengulang_pengguna")
     if SPEAKER_LABEL_RE.search(joined):
         reasons.append("label_pembicara_di_dalam_teks")
+    if PLACEHOLDER_RE.search(joined):
+        reasons.append("placeholder_dalam_pesan")
     # Register mixing is not necessarily fatal; mark for review after normalization.
     if SLANG_RE.search(joined) and FORMAL_RE.search(joined):
         reasons.append("campuran_register_awal")
