@@ -22,7 +22,11 @@ DIGITAL_TERMS = [
     "aplikasi", "website", "email", "e-mail", "whatsapp", "instagram",
     "facebook", "twitter", "tiktok", "youtube", "ponsel", "smartphone",
     "gadget", "laptop", "komputer", "wifi", "wi-fi", "browser", "google",
-    "streaming", "online", "chatbot", "hp", "handphone", "telepon", "tablet",\n    "televisi", "tv", "game", "video game", "game online", "game mobile", "game pc",\n    "main game", "pubg", "mobile legends", "iphone", "android", "samsung", "prosesor",\n    "processor", "layar", "keyboard", "printer", "mouse", "kamera digital", "zalora",\n    "shopee", "tokopedia", "bukalapak",
+    "streaming", "online", "chatbot", "hp", "handphone", "telepon", "tablet",
+    "televisi", "tv", "game", "video game", "game online", "game mobile", "game pc",
+    "main game", "pubg", "mobile legends", "iphone", "android", "samsung", "prosesor",
+    "processor", "layar", "keyboard", "printer", "mouse", "kamera digital", "zalora",
+    "shopee", "tokopedia", "bukalapak",
 ]
 DIGITAL_RE = re.compile(
     r"\b(?:" + "|".join(re.escape(x) for x in sorted(DIGITAL_TERMS, key=len, reverse=True)) + r")\b",
