@@ -173,3 +173,13 @@ Korpus hanya boleh dinyatakan lolos setelah audit isi dan audit struktur sama-sa
 - Untuk contoh listrik dan alat rumah, utamakan keselamatan dan sarankan bantuan orang yang paham jika pemeriksaan memerlukan pembongkaran.
 - Setelah penyuntingan, periksa kembali jumlah baris, ID unik, urutan peran, gaya kata ganti, istilah digital, dan pengulangan jawaban.
 - Korpus 449 percakapan hasil pemeriksaan 25 November 2026 dinyatakan lolos pemeriksaan editorial dan struktur dasar. Kualitas jawaban model tetap harus diuji setelah training; lolos audit korpus bukan jaminan model akan selalu menjawab dengan baik.
+
+
+## Catatan audit mutu akhir — 25 November 2026
+
+- Periksa keamanan saran untuk makanan sisa, listrik, alat rumah, dan kendaraan. Jangan menyimpulkan makanan aman hanya dari bau atau tampilan.
+- Nasi matang sebaiknya segera disimpan di lemari es; jika dibiarkan lebih dari dua jam pada suhu ruang, sarankan untuk membuangnya.
+- Jangan menyarankan penggunaan kabel yang terkelupas atau membongkar bagian listrik oleh orang yang tidak paham.
+- Jika rem sepeda bermasalah atau tidak pakem, sarankan untuk tidak mengendarainya sampai diperiksa.
+- Periksa juga label topik. Label harus menggambarkan isi percakapan, bukan menyisakan istilah digital atau istilah yang tidak dibahas.
+- Jumlah akhir setelah audit mutu menyeluruh: 448 percakapan. Angka ini berasal dari pembacaan ulang sembilan berkas korpus pada branch, bukan dari angka laporan sebelumnya.
