@@ -3,13 +3,13 @@
   "reviewed_pool": "candidate_unreviewed.jsonl",
   "candidate_pool_size_at_sampling": 30625,
   "sample_size": 50,
-  "sampling": "Simple random sample without replacement from records not included in batch 1; Python random.Random(20261128)",
+  "sampling": "Simple random sample without replacement from records not included in the prior 100-record review or batch 1; Python random.Random(20261128); overlapping prior-review ID replaced by a fresh sample",
   "decisions": {
     "keep_light_edit": 3,
-    "rewrite": 21,
-    "discard": 26,
+    "rewrite": 20,
+    "discard": 27,
     "exclude_topic": 0
   },
   "training_use": "disabled",
-  "warning": "Only these 50 IDs were manually reviewed; not a dataset-wide quality estimate."
+  "warning": "Only these 50 unique IDs were manually reviewed; not a dataset-wide quality estimate."
 }
