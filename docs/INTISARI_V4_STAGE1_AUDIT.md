@@ -8,18 +8,19 @@
 - Berkas mentah tidak diubah.
 
 ## Hasil penyaringan mekanis terbaru
-- Calon belum ditinjau: 31.497
-- Karantina: 18.550
+- Calon belum ditinjau: 30.625
+- Karantina: 19.422
 - Pesan pengguna: 80.150
 - Pesan asisten: 75.228
-- Unit test aturan kurasi: lulus.
+- Unit test aturan kurasi: lulus pada workflow terbaru.
 
 Alasan yang paling sering terdeteksi:
-- Topik digital/perangkat/permainan daring: 5.931
+- Topik digital/perangkat/permainan daring: 6.052
 - Susunan giliran tidak benar: 5.412
 - Susunan kalimat janggal: 3.405
 - Jawaban mengulang pesan pengguna: 3.391
 - Pengulangan kata: 1.851
+- Placeholder dalam pesan: 1.409
 - Percakapan terlalu panjang: 1.218
 - Campuran ragam kata ganti: 878
 - Kata rusak yang dikenali: 668
@@ -31,38 +32,29 @@ Alasan yang paling sering terdeteksi:
 
 Satu percakapan dapat memiliki lebih dari satu alasan, jadi jumlah alasan tidak boleh dijumlahkan untuk memperoleh jumlah percakapan.
 
-## Pemeriksaan manual sampel calon
-Sampel acak 25 percakapan dari kelompok calon masih menunjukkan masalah semantik dan bahasa yang nyata:
-- jawaban tidak menjawab pertanyaan atau mengarang konteks;
-- kalimat tidak alami, misalnya susunan kata yang tidak masuk akal;
-- kesalahan pilihan kata dan salah ketik yang tidak tercakup daftar kata rusak;
-- jawaban resep atau penjelasan yang keliru;
-- asisten mengulang jawaban atau memberi jawaban sangat umum;
-- kata ganti sudah diseragamkan, tetapi sudut pandang pembicara masih tertukar;
-- contoh dengan label `Aku:` / `Kamu:` yang seharusnya menjadi metadata, bukan isi percakapan.
+## Pemeriksaan manual
+Audit manual tahap 2 memeriksa 100 percakapan acak dari kelompok calon. Hasil dan daftar ID ada di:
+- `docs/INTISARI_V4_STAGE2_MANUAL_AUDIT.md`
+- `data/curated/intisari_v4/manual_review_100_index.json`
 
-Contoh masalah yang ditemukan pada sampel:
-- pertanyaan tentang resep gudeg dijawab dengan bahan yang tidak sesuai;
-- pertanyaan tentang cuaca dijawab dengan konteks yang tidak jelas;
-- percakapan tidur berulang dengan jawaban yang tidak membantu;
-- kalimat tentang makanan, taman, dan kegiatan yang memakai kata secara keliru.
+Hasil sampel: 21 perlu sunting ringan, 26 perlu tulis ulang, 43 dibuang, 5 dikeluarkan karena topik, dan 5 dibuang karena struktur. Hasil ini hanya berlaku untuk sampel 100, bukan seluruh 30.625 calon.
 
 ## Kesimpulan mutu
-**31.497 calon bukan 31.497 percakapan bersih.** Mereka hanya lolos pemeriksaan mekanis. Pemeriksaan berbasis aturan tidak dapat memastikan relevansi jawaban, kewajaran fakta, dan kesinambungan makna.
+**30.625 calon bukan 30.625 percakapan bersih.** Mereka hanya lolos pemeriksaan mekanis. Pemeriksaan berbasis aturan tidak dapat memastikan relevansi jawaban, kewajaran fakta, dan kesinambungan makna.
 
-Dataset V4 memiliki banyak contoh yang tampak seperti percakapan, tetapi sebagian besar masih membutuhkan penilaian isi. Jangan menganggap seluruh calon layak dipakai hanya karena formatnya benar.
+Penyaringan tambahan menambah deteksi istilah media sosial/komputasi serta placeholder seperti `...`. Hal ini mengurangi calon dari 31.497 menjadi 30.625. Perubahan tersebut memperbaiki cakupan pemeriksaan, tetapi tidak menyelesaikan masalah mutu semantik.
 
 ## Tahap kurasi berikutnya
-1. Ambil sampel calon secara acak dan beri label manusia: layak, perlu sunting ringan, perlu tulis ulang, atau buang.
-2. Susun daftar pola kesalahan berdasarkan sampel yang benar-benar dibaca.
-3. Terapkan perbaikan otomatis hanya untuk hal yang aman, seperti kata ganti dan ejaan yang pasti.
-4. Tulis ulang hanya contoh yang masih memiliki alur dan maksud yang bisa dipertahankan.
-5. Buang contoh yang memerlukan perubahan besar atau mengandung jawaban salah.
-6. Audit ulang seluruh keluaran dan bandingkan sampel sebelum/sesudah.
+1. Lanjutkan audit sampel acak bertahap agar cakupan penilaian makin luas.
+2. Perbaiki otomatis hanya hal yang aman, seperti ejaan yang pasti dan konsistensi kata ganti.
+3. Tulis ulang contoh hanya jika maksud dan alur percakapan masih jelas.
+4. Buang contoh yang membutuhkan perubahan besar atau mengandung jawaban salah.
+5. Lakukan audit ulang pada semua contoh yang telah disunting.
 
 ## Keputusan
 - Berkas mentah tetap menjadi sumber yang tidak diubah.
 - `candidate_unreviewed.jsonl` hanya antrean audit lanjutan.
 - `quarantine.jsonl` berisi percakapan yang perlu ditinjau atau dibuang.
+- Sepuluh contoh pilot di `data/curated/intisari_v4/pilot_edited_10.jsonl` masih berstatus `pilot_edited_not_training_ready`.
 - Tidak ada keluaran yang dinyatakan siap latih.
 - Training tetap dinonaktifkan sampai audit semantik selesai dan pengguna memberi persetujuan.
