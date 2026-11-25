@@ -26,7 +26,9 @@ DIGITAL_TERMS = [
     "televisi", "tv", "game", "video game", "game online", "game mobile", "game pc",
     "main game", "pubg", "mobile legends", "iphone", "android", "samsung", "prosesor",
     "processor", "layar", "keyboard", "printer", "mouse", "kamera digital", "zalora",
-    "shopee", "tokopedia", "bukalapak", "sosmed", "medsos", "login",\n    "password", "username", "data mining", "komputasi", "algoritma", "slide",\n    "presentasi digital", "kode verifikasi", "akun media sosial",
+    "shopee", "tokopedia", "bukalapak", "sosmed", "medsos", "login",
+    "password", "username", "data mining", "komputasi", "algoritma", "slide",
+    "presentasi digital", "kode verifikasi", "akun media sosial",
 ]
 DIGITAL_RE = re.compile(
     r"\b(?:" + "|".join(re.escape(x) for x in sorted(DIGITAL_TERMS, key=len, reverse=True)) + r")\b",
