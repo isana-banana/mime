@@ -1,0 +1,15 @@
+{
+  "dataset": "INTISARI/intisari-indonesian-chat-v4",
+  "reviewed_pool": "candidate_unreviewed.jsonl",
+  "candidate_pool_size_at_sampling": 30625,
+  "sample_size": 50,
+  "sampling": "Simple random sample without replacement; Python random.Random(20261127)",
+  "decisions": {
+    "keep_light_edit": 2,
+    "rewrite": 16,
+    "discard": 30,
+    "exclude_topic": 2
+  },
+  "training_use": "disabled",
+  "warning": "Only these 50 IDs were manually reviewed; not a dataset-wide quality estimate."
+}
