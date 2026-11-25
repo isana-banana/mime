@@ -8,6 +8,7 @@ on:
       - "curate_intisari_v4.py"
       - ".github/workflows/curate-intisari-v4.yml"
       - "data/external/intisari_v4/intisari_v4.jsonl"
+      - "tests/test_intisari_curation.py"
   workflow_dispatch:
     inputs:
       sample_limit:
