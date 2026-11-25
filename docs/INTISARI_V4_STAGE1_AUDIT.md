@@ -7,14 +7,15 @@
 - SHA-256 sumber: `eb25826bc0b932b8a8dd1f1d2995305bec1271f6c13aa0415b04cdfd99356589`
 - Berkas mentah tidak diubah.
 
-## Hasil penyaringan mekanis
-- Calon belum ditinjau: 31.546
-- Karantina: 18.501
+## Hasil penyaringan mekanis terbaru
+- Calon belum ditinjau: 31.497
+- Karantina: 18.550
 - Pesan pengguna: 80.150
 - Pesan asisten: 75.228
+- Unit test aturan kurasi: lulus.
 
 Alasan yang paling sering terdeteksi:
-- Topik digital: 5.931
+- Topik digital/perangkat/permainan daring: 5.931
 - Susunan giliran tidak benar: 5.412
 - Susunan kalimat janggal: 3.405
 - Jawaban mengulang pesan pengguna: 3.391
@@ -24,23 +25,44 @@ Alasan yang paling sering terdeteksi:
 - Kata rusak yang dikenali: 668
 - Pesan terlalu pendek: 304
 - Duplikat setelah normalisasi: 118
+- Label pembicara tertanam di isi pesan: 88
+- Pola teks mencurigakan: 73
+- Teks terlalu panjang: 1
 
 Satu percakapan dapat memiliki lebih dari satu alasan, jadi jumlah alasan tidak boleh dijumlahkan untuk memperoleh jumlah percakapan.
 
-## Pemeriksaan manual sampel
-Sampel acak dari kelompok calon masih menunjukkan:
-- jawaban yang tidak menjawab pertanyaan;
-- kalimat yang terdengar tidak alami atau tidak masuk akal;
-- kata yang salah atau berubah bentuk;
+## Pemeriksaan manual sampel calon
+Sampel acak 25 percakapan dari kelompok calon masih menunjukkan masalah semantik dan bahasa yang nyata:
+- jawaban tidak menjawab pertanyaan atau mengarang konteks;
+- kalimat tidak alami, misalnya susunan kata yang tidak masuk akal;
+- kesalahan pilihan kata dan salah ketik yang tidak tercakup daftar kata rusak;
 - jawaban resep atau penjelasan yang keliru;
-- asisten kadang mengambil posisi seolah-olah melakukan kegiatan fisik bersama pengguna;
-- kata ganti yang sudah dinormalisasi tetapi peran pembicara masih tertukar.
+- asisten mengulang jawaban atau memberi jawaban sangat umum;
+- kata ganti sudah diseragamkan, tetapi sudut pandang pembicara masih tertukar;
+- contoh dengan label `Aku:` / `Kamu:` yang seharusnya menjadi metadata, bukan isi percakapan.
 
-Artinya, pemeriksaan mekanis belum cukup untuk menetapkan kelayakan percakapan. Kelompok 31.546 adalah antrean untuk penilaian semantik, bukan korpus bersih dan bukan data siap latih.
+Contoh masalah yang ditemukan pada sampel:
+- pertanyaan tentang resep gudeg dijawab dengan bahan yang tidak sesuai;
+- pertanyaan tentang cuaca dijawab dengan konteks yang tidak jelas;
+- percakapan tidur berulang dengan jawaban yang tidak membantu;
+- kalimat tentang makanan, taman, dan kegiatan yang memakai kata secara keliru.
+
+## Kesimpulan mutu
+**31.497 calon bukan 31.497 percakapan bersih.** Mereka hanya lolos pemeriksaan mekanis. Pemeriksaan berbasis aturan tidak dapat memastikan relevansi jawaban, kewajaran fakta, dan kesinambungan makna.
+
+Dataset V4 memiliki banyak contoh yang tampak seperti percakapan, tetapi sebagian besar masih membutuhkan penilaian isi. Jangan menganggap seluruh calon layak dipakai hanya karena formatnya benar.
+
+## Tahap kurasi berikutnya
+1. Ambil sampel calon secara acak dan beri label manusia: layak, perlu sunting ringan, perlu tulis ulang, atau buang.
+2. Susun daftar pola kesalahan berdasarkan sampel yang benar-benar dibaca.
+3. Terapkan perbaikan otomatis hanya untuk hal yang aman, seperti kata ganti dan ejaan yang pasti.
+4. Tulis ulang hanya contoh yang masih memiliki alur dan maksud yang bisa dipertahankan.
+5. Buang contoh yang memerlukan perubahan besar atau mengandung jawaban salah.
+6. Audit ulang seluruh keluaran dan bandingkan sampel sebelum/sesudah.
 
 ## Keputusan
-1. Pertahankan berkas mentah tanpa perubahan.
-2. Gunakan `candidate_unreviewed.jsonl` hanya sebagai antrean audit lanjutan.
-3. Gunakan `quarantine.jsonl` untuk pemeriksaan atau pembuangan berdasarkan alasan.
-4. Perbaiki contoh yang masih dapat diselamatkan secara manual; buang contoh yang membutuhkan penulisan ulang besar.
-5. Jangan jalankan training dari keluaran ini sampai audit semantik dan persetujuan pengguna selesai.
+- Berkas mentah tetap menjadi sumber yang tidak diubah.
+- `candidate_unreviewed.jsonl` hanya antrean audit lanjutan.
+- `quarantine.jsonl` berisi percakapan yang perlu ditinjau atau dibuang.
+- Tidak ada keluaran yang dinyatakan siap latih.
+- Training tetap dinonaktifkan sampai audit semantik selesai dan pengguna memberi persetujuan.
