@@ -47,7 +47,7 @@ public class MainActivity extends Activity {
         messages.setPadding(14,12,14,12); scroll.addView(messages);
         root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
         TextView note=new TextView(this);
-        note.setText("298.656 parameter · offline · model eksperimen, jawaban mungkin belum koheren");
+        note.setText("335.520 parameter · offline · model eksperimen, jawaban mungkin belum koheren");
         note.setTextColor(Color.GRAY); note.setTextSize(11); note.setPadding(16,6,16,6); root.addView(note);
         LinearLayout bar=new LinearLayout(this); bar.setPadding(12,8,12,12);
         bar.setGravity(Gravity.CENTER_VERTICAL);

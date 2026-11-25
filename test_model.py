@@ -43,7 +43,7 @@ def main():
     model = TinyLanguageModel(config)
     model.load_state_dict(ckpt["model"], strict=True)
     model.eval()
-    assert model.parameter_count() == 298656
+    assert model.parameter_count() == 335520
     x = torch.tensor([[BOS_ID, *"Halo".encode("utf-8")]], dtype=torch.long)
     logits, _ = model(x)
     assert logits.shape == (1, x.shape[1], 258), logits.shape

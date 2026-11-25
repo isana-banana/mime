@@ -18,7 +18,7 @@ NAMES += ["final_norm.weight", "final_norm.bias"]
 
 EXPECTED_SHAPES = {
     "token_embedding.weight": (258, 96),
-    "position_embedding.weight": (128, 96),
+    "position_embedding.weight": (512, 96),
     "final_norm.weight": (96,),
     "final_norm.bias": (96,),
 }
@@ -51,7 +51,7 @@ def main():
     if checkpoint.get("config") != expected:
         raise ValueError(f"Unexpected model config: {checkpoint.get('config')}")
     if checkpoint.get("parameter_count") != 335520:
-        raise ValueError("Checkpoint is not the expected 298,656-parameter model.")
+        raise ValueError("Checkpoint is not the expected 335,520-parameter model.")
     if int(checkpoint.get("step", 0)) < 1:
         raise ValueError("Checkpoint has no completed training step.")
 
