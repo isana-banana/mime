@@ -33,3 +33,33 @@ Pemeriksaan otomatis di atas adalah pemeriksaan bentuk dan kata kunci. Ini belum
 
 ## Keputusan
 Korpus 493 percakapan ini menjadi dasar penyuntingan berikutnya. Belum dilakukan pelatihan ulang.
+
+
+## Audit isi lanjutan — 25 November 2026
+
+### Hasil penyaringan kedua
+- Dari 493 percakapan, 23 percakapan lain yang berpusat pada telepon, rekaman suara, kabel pengisi daya, pesan digital, pemberitahuan, berita dari akun daring, papan ketik, salindia, profil daring, kotak masuk, atau grup percakapan dihapus.
+- Satu percakapan tentang salindia yang masih tertinggal juga dihapus.
+- Total korpus sekarang 469 percakapan; dari jumlah awal 553, total 84 percakapan digital/kurang sesuai telah dikeluarkan.
+- Percakapan umum yang dapat berlangsung secara luring disunting, bukan langsung dibuang. Contohnya daftar lagu ditulis di kertas, catatan ide memakai buku kecil, peta menggunakan peta lipat, dan jadwal memakai catatan biasa.
+
+### Penyederhanaan bahasa tambahan
+- Kata seperti kapasitas, tenggat, tindak lanjut, konfirmasi, rasio, gradasi, drainase, audiens, dan sumber daya diganti dengan ungkapan sehari-hari sesuai kalimat.
+- Kalimat hasil penggantian otomatis yang terdengar janggal diperbaiki secara khusus.
+- Satu percakapan tentang membuat prototipe diganti menjadi percakapan nyata tentang membuat tempat pensil dari kardus bekas.
+- Label topik yang terlalu teknis atau tidak sesuai diperbaiki.
+
+### Audit otomatis setelah penyuntingan
+- 469 percakapan dengan 469 ID unik.
+- Tidak ada ID ganda.
+- Tidak ada jawaban asisten yang sama persis.
+- Tidak ditemukan gue/gua/lo/lu/elo/elu.
+- Tidak ada campuran aku-kamu dengan saya-Anda dalam satu percakapan.
+- Semua susunan pesan dan label gaya valid.
+- Pemeriksaan kata kunci tidak menemukan pembahasan komputer atau teknologi digital.
+
+### Catatan mutu
+Pemeriksaan isi dilakukan berurutan pada seluruh kelompok percakapan yang tersedia. Audit kemiripan jawaban memakai perbandingan kata sederhana tidak menemukan pasangan jawaban yang melewati ambang kemiripan 0,48; ini bukan bukti bahwa tidak ada pengulangan makna. Topik yang sering muncul, seperti menulis, belajar, belanja, bahasa, perjalanan, dan memasak, masih perlu dijaga variasi situasi serta bentuk jawabannya.
+
+### Status
+Belum dilakukan pelatihan ulang. Korpus 469 percakapan menjadi bahan untuk pemeriksaan mutu berikutnya, bukan tanda bahwa korpus sudah final.
