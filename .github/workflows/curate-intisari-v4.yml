@@ -1,0 +1,42 @@
+name: INTISARI V4 curation audit
+
+on:
+  workflow_dispatch:
+    inputs:
+      sample_limit:
+        description: "Optional number of source lines to process (0 = all)"
+        required: false
+        default: "0"
+
+permissions:
+  contents: read
+
+jobs:
+  curate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run conservative curation
+        run: |
+          LIMIT="${{ inputs.sample_limit }}"
+          if [ "$LIMIT" = "0" ]; then
+            python curate_intisari_v4.py --output-dir artifacts/intisari_v4
+          else
+            python curate_intisari_v4.py --limit "$LIMIT" --output-dir artifacts/intisari_v4
+          fi
+      - name: Package results
+        run: |
+          cd artifacts
+          zip -r intisari_v4_curation.zip intisari_v4
+      - name: Upload curation artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: intisari-v4-curation
+          path: artifacts/intisari_v4_curation.zip
+          if-no-files-found: error
+          retention-days: 30
