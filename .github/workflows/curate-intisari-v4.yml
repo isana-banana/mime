@@ -9,6 +9,7 @@ on:
       - ".github/workflows/curate-intisari-v4.yml"
       - "data/external/intisari_v4/intisari_v4.jsonl"
       - "tests/test_intisari_curation.py"
+      - "data/curated/intisari_v4/**"
   workflow_dispatch:
     inputs:
       sample_limit:
