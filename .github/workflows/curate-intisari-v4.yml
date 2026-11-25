@@ -31,7 +31,7 @@ jobs:
       - name: Run conservative curation
         run: |
           LIMIT="${{ inputs.sample_limit }}"
-          if [ "$LIMIT" = "0" ]; then
+          if [ -z "$LIMIT" ] || [ "$LIMIT" = "0" ]; then
             python curate_intisari_v4.py --output-dir artifacts/intisari_v4
           else
             python curate_intisari_v4.py --limit "$LIMIT" --output-dir artifacts/intisari_v4
