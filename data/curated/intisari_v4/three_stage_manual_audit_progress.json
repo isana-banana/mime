@@ -118,5 +118,8 @@
   "stage1_unique_decisions": {
     "keep_in_scope": 125,
     "exclude_digital_topic": 193
-  }
+  },
+  "stage1_manual_batch_size": 1000,
+  "stage1_next_batch_target": 1000,
+  "stage1_next_batch_note": "Batch berikutnya menargetkan 1.000 ID baru dari antrean campuran. Untuk menjaga ketelitian, pemeriksaan dapat dilakukan dalam 10 subkelompok internal masing-masing 100 ID, lalu digabung sebagai satu batch resmi. Tidak ada ID yang dihitung selesai sebelum seluruh 1.000 ID benar-benar diperiksa."
 }
