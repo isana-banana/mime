@@ -2,8 +2,8 @@
   "source": "INTISARI/intisari-indonesian-chat-v4",
   "source_records": 50047,
   "stage1_mixed_queue_total": 1427,
-  "stage1_manual_reviewed": 168,
-  "stage1_manual_remaining": 1259,
+  "stage1_manual_reviewed": 193,
+  "stage1_manual_remaining": 1234,
   "stage1_batches": [
     {
       "batch": "batch1",
@@ -65,6 +65,16 @@
       "keep_in_scope": 9,
       "exclude_digital_topic": 16,
       "duplicate_ids": 0
+    },
+    {
+      "batch": "batch8",
+      "file": "data/curated/intisari_v4/stage1_manual_audit_batch8_25.jsonl",
+      "report": "docs/INTISARI_V4_STAGE1_MANUAL_AUDIT_BATCH8.md",
+      "reviewed": 25,
+      "unique_ids": 25,
+      "keep_in_scope": 12,
+      "exclude_digital_topic": 13,
+      "duplicate_ids": 0
     }
   ],
   "stage3_manual_pilot": {
@@ -77,16 +87,16 @@
     "status": "provisional_only_not_final_until_stage1_and_stage2_complete"
   },
   "training_ready": false,
-  "stage1_mixed_remaining": 1259,
-  "stage1_unique_manual_reviewed": 168,
-  "stage1_unique_manual_review_remaining": 1512,
+  "stage1_mixed_remaining": 1234,
+  "stage1_unique_manual_reviewed": 193,
+  "stage1_unique_manual_review_remaining": 1487,
   "stage2_status": "provisional_mechanical_run_pending_stage1_manual_completion",
   "stage3_status": "pilot_only_pending_stage1_and_stage2_final",
-  "stage1_manual_rows_recorded": 175,
+  "stage1_manual_rows_recorded": 200,
   "stage1_ambiguous_only_remaining": 253,
   "stage1_manual_duplicate_rows": 7,
   "stage1_unique_decisions": {
-    "keep_in_scope": 69,
-    "exclude_digital_topic": 99
+    "keep_in_scope": 81,
+    "exclude_digital_topic": 112
   }
 }
