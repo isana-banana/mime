@@ -75,9 +75,7 @@ def stage1(input_path: Path, out: Path):
         hits=[name for name,pat in DIGITAL_RE.items() if pat.search(joined)]
         # A single incidental internet/web mention inside a clearly offline conversation
         # is not enough to discard the whole dialogue; retain it for manual context review.
-        digital_match_count=sum(len(pat.findall(joined)) for pat in DIGITAL_RE.values())
         offline_anchor=bool(OFFLINE_CONTEXT_RE.search(joined))
-        online_commerce_hits=len(DIGITAL_RE["digital_services"].findall(joined))
         mixed_context=(
             offline_anchor
             and "computing_topics" not in hits
