@@ -18,13 +18,13 @@ DIGITAL_PATTERNS = {
     "apps_accounts": r"\b(?:aplikasi|app|login|logout|kata sandi|password|username|akun digital|kode verifikasi|whatsapp|email|e-mail)\b",
     "computing_devices": r"\b(?:komputer|laptop|ponsel|smartphone|handphone|telepon genggam|tablet|gadget|keyboard|printer|prosesor|processor|samsung|iphone|android)\b",
     "digital_services": r"\b(?:marketplace|e-commerce|ecommerce|toko online|belanja online|online shop|online shopping|streaming|chatbot|layanan daring|platform digital)\b",
-    "digital_games": r"\b(?:game online|video game|game mobile|game pc|mobile legends|pubg|main game|bermain game)\b",
+    "digital_games": r"\b(?:game online|video game|game mobile|game pc|mobile legends|pubg|genshin impact|fortnite|fifa|league of legends)\b",
     "computing_topics": r"\b(?:data mining|komputasi|algoritma|pemrograman|coding|kode program|basis data|database)\b",
     "digital_presentation": r"\b(?:slide presentasi|presentasi digital|powerpoint|kode html)\b",
 }
 DIGITAL_RE = {k: re.compile(v, re.I) for k,v in DIGITAL_PATTERNS.items()}
 OFFLINE_CONTEXT_RE = re.compile(
-    r"\\b(?:pasar|supermarket|mal|mall|toko|warung|belanja|berbelanja|masak|memasak|makanan|masakan|sayur|ayam|baju|pakaian|kebun|sawah|kucing|anjing|hujan|cuaca|rapat|sekolah|kampus|kantor|perjalanan|kereta|krl)\\b",
+    r"\b(?:pasar|supermarket|mal|mall|toko|warung|belanja|berbelanja|masak|memasak|makanan|masakan|sayur|ayam|baju|pakaian|kebun|sawah|kucing|anjing|hujan|cuaca|rapat|sekolah|kampus|kantor|perjalanan|kereta|krl)\b",
     re.I,
 )
 
