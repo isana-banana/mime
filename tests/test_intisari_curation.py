@@ -231,3 +231,34 @@ class Stage1ManualBatchTests(unittest.TestCase):
         self.assertEqual(progress["stage1_mixed_remaining"], 109)
         self.assertEqual(progress["stage1_ambiguous_only_remaining"], 253)
         self.assertEqual(progress["stage1_unique_decisions"], {"keep_in_scope": 365, "exclude_digital_topic": 953})
+
+
+    def test_batch12_closes_all_stage1_manual_queues(self):
+        import json
+        from pathlib import Path
+
+        root = Path(__file__).resolve().parents[1]
+        batch_path = root / "data/curated/intisari_v4/stage1_manual_audit_batch12_362.jsonl"
+        records = [json.loads(line) for line in batch_path.read_text(encoding="utf-8").splitlines() if line]
+        ids = [item["id"] for item in records]
+        self.assertEqual(len(records), 362)
+        self.assertEqual(len(set(ids)), 362)
+        self.assertTrue(all(item["training_ready"] is False for item in records))
+        self.assertEqual(sum(item["decision"] == "keep_in_scope" for item in records), 223)
+        self.assertEqual(sum(item["decision"] == "exclude_digital_topic" for item in records), 139)
+
+        prior_ids = set()
+        for index in range(1, 10):
+            path = root / f"data/curated/intisari_v4/stage1_manual_audit_batch{index}_25.jsonl"
+            prior_ids.update(json.loads(line)["id"] for line in path.read_text(encoding="utf-8").splitlines() if line)
+        for name in ("batch10_100", "batch11_1000"):
+            path = root / f"data/curated/intisari_v4/stage1_manual_audit_{name}.jsonl"
+            prior_ids.update(json.loads(line)["id"] for line in path.read_text(encoding="utf-8").splitlines() if line)
+        self.assertFalse(set(ids) & prior_ids)
+
+        progress = json.loads((root / "data/curated/intisari_v4/three_stage_manual_audit_progress.json").read_text(encoding="utf-8"))
+        self.assertEqual(progress["stage1_unique_manual_reviewed"], 1680)
+        self.assertEqual(progress["stage1_unique_manual_review_remaining"], 0)
+        self.assertEqual(progress["stage1_mixed_remaining"], 0)
+        self.assertEqual(progress["stage1_ambiguous_only_remaining"], 0)
+        self.assertEqual(progress["stage1_unique_decisions"], {"keep_in_scope": 588, "exclude_digital_topic": 1092})
