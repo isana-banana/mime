@@ -23,11 +23,11 @@ Branch: `experiment/intisari-v4-curation`
 
 Catatan: 1.427 contoh campuran dan 346 contoh ambigu dapat saling tumpang tindih. Contoh belanja di pasar, warung, supermarket, dan mal tidak otomatis dibuang karena menyebut internet, website, atau media sosial sekilas.
 
-Audit manual atas 218 ID unik dari contoh campuran:
-- 88 dipertahankan dalam cakupan.
-- 130 dikeluarkan sebagai topik digital.
-- Sembilan batch berisi 225 baris audit. Tujuh baris merupakan ID duplikat yang sudah tercatat pada batch sebelumnya; penghitungan kemajuan menggunakan ID unik.
-- Masih ada 1.209 contoh campuran dan 253 contoh ambigu saja yang belum diperiksa, total 1.462 ID unik.
+Audit manual atas 318 ID unik dari contoh campuran:
+- 125 dipertahankan dalam cakupan.
+- 193 dikeluarkan sebagai topik digital.
+- Sepuluh batch berisi 325 baris audit. Tujuh baris merupakan ID duplikat yang sudah tercatat pada batch sebelumnya; penghitungan kemajuan menggunakan ID unik.
+- Masih ada 1.109 contoh campuran dan 253 contoh ambigu saja yang belum diperiksa, total 1.362 ID unik.
 
 
 Rincian batch ketujuh: 25 ID baru diperiksa; 9 dipertahankan dan 16 dikeluarkan. Tidak ada ID duplikat pada batch ini. Laporan: `docs/INTISARI_V4_STAGE1_MANUAL_AUDIT_BATCH7.md`.
@@ -83,3 +83,5 @@ Audit mutu ini masih percontohan dan belum menjadi hasil akhir korpus.
 Workflow: https://github.com/isana-banana/mime/actions/runs/45796983660
 
 Rincian batch kesembilan: 25 ID baru diperiksa; 7 dipertahankan dan 18 dikeluarkan. Tidak ada ID duplikat pada batch ini. Laporan: `docs/INTISARI_V4_STAGE1_MANUAL_AUDIT_BATCH9.md`.
+
+Rincian batch kesepuluh: 100 ID baru diperiksa; 37 dipertahankan dan 63 dikeluarkan. Tidak ada ID duplikat pada batch ini. Laporan: `docs/INTISARI_V4_STAGE1_MANUAL_AUDIT_BATCH10.md`.
