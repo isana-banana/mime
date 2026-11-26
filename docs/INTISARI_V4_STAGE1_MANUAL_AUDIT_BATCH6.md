@@ -1,7 +1,7 @@
 # INTISARI V4 — Audit Manual Relevansi Tahap 1, Batch 6 (25 percakapan)
 
 - Sumber: antrean campuran hasil pemrosesan penuh.
-- Semua 25 ID pada batch ini berbeda dari ID yang sudah diaudit sebelumnya.
+- Dari 25 baris, 23 ID merupakan contoh baru. Dua ID (`intisari-v4-004526` dan `intisari-v4-004529`) ternyata sudah ada pada batch terdahulu dan ditandai sebagai duplikat agar tidak dihitung dua kali.
 - Fokus: topik utama percakapan, bukan sekadar penyebutan alat digital.
 
 ## Hasil
