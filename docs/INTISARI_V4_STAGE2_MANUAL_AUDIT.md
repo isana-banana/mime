@@ -9,35 +9,43 @@ Audit ini menilai **100 percakapan secara manual** dari berkas `candidate_unrevi
 |---|---:|---|
 | Pertahankan dengan sunting ringan | 21 | Inti dialog cukup baik, masih perlu perapian |
 | Tulis ulang | 26 | Topik masih berguna, tetapi jawaban/kalimat perlu diperbaiki |
-| Buang | 43 | Makna rusak, jawaban tidak nyambung, mengarang, atau mutu terlalu rendah |
+| Buang | 43 | Makna rusak, jawaban tidak nyambung, atau mutu terlalu rendah |
 | Keluarkan karena topik | 5 | Membahas akun/media sosial, kabel/koneksi, atau komputasi |
 | Buang karena struktur | 5 | Label pembicara tertanam, konteks hilang, atau placeholder |
 | **Total** | **100** | |
 
-**Makna hasil:** hanya 21% sampel yang cukup baik untuk dipertahankan dengan suntingan ringan. Sebanyak 26% masih mungkin diselamatkan dengan penulisan ulang. Sebanyak 53% sebaiknya tidak masuk ke korpus hasil kurasi. Angka ini menggambarkan sampel 100, bukan estimasi pasti untuk seluruh dataset.
+**Makna hasil:** hanya 21% sampel yang cukup baik untuk dipertahankan dengan suntingan ringan. Sebanyak 26% masih mungkin diselamatkan dengan penulisan ulang. Angka ini menggambarkan sampel 100, bukan estimasi pasti untuk seluruh dataset.
 
 ## Pola masalah yang ditemukan
 1. **Jawaban tidak menjawab pertanyaan** — misalnya pertanyaan makan siang dibalas dengan informasi hujan.
-2. **Asisten mengarang pengalaman atau kemampuan fisik** — misalnya menawarkan menjemput atau mengaku memiliki mobil/tempat tertentu.
-3. **Kalimat rusak** — kata salah bentuk, susunan kata tidak wajar, atau makna tidak dapat dipastikan.
-4. **Percakapan berputar** — mengulang pertanyaan atau jawaban tanpa menambah isi.
-5. **Jawaban terlalu umum** — benar secara bentuk, tetapi tidak membantu.
-6. **Klaim tanpa dasar** — seperti mengarang gaji pribadi, suhu, waktu perjalanan, atau rekomendasi tertentu.
-7. **Label pembicara masuk ke isi** — misalnya `Aku:` dan `Kamu:` ditulis sebagai bagian pesan.
-8. **Konteks tidak lengkap** — pesan seperti “Kenapa?” tidak dapat dinilai tanpa percakapan sebelumnya.
+2. **Kalimat rusak** — kata salah bentuk, susunan kata tidak wajar, atau makna tidak dapat dipastikan.
+3. **Percakapan berputar** — mengulang pertanyaan atau jawaban tanpa menambah isi.
+4. **Jawaban terlalu umum** — benar secara bentuk, tetapi tidak membantu.
+5. **Klaim faktual tanpa dasar atau keliru** — terutama saat memberi informasi nyata seperti harga, cuaca, waktu perjalanan, atau saran.
+6. **Label pembicara masuk ke isi** — misalnya `Aku:` dan `Kamu:` ditulis sebagai bagian pesan.
+7. **Konteks tidak lengkap** — pesan seperti “Kenapa?” tidak dapat dinilai tanpa percakapan sebelumnya.
+
+## Aturan persona asisten (berlaku untuk audit ulang dan batch berikutnya)
+- Asisten boleh memiliki tubuh, pekerjaan, keluarga, teman, hewan peliharaan, rumah, kendaraan, kesukaan, kebiasaan, dan pengalaman pribadi sebagai bagian dari persona percakapan.
+- Jangan memberi label buruk atau membuang dialog hanya karena asisten bercerita “aku lapar”, “aku punya kucing”, “aku bekerja”, atau “aku pernah pergi”.
+- Yang perlu diperiksa adalah apakah cerita itu relevan, masuk akal, dan konsisten di dalam dialog. Kontradiksi nyata, perubahan cerita tanpa alasan, atau jawaban yang menghindari pertanyaan tetap perlu diperbaiki.
+- Bedakan cerita persona (dinilai dari kelancaran dan konsistensi internal) dengan informasi dunia nyata atau nasihat (dinilai dari ketepatan faktanya).
+- Saat menyunting, jangan menambah pengalaman, keluarga, tempat, angka, atau kejadian baru yang tidak didukung sumber. Pertahankan detail persona yang sudah ada jika dialognya baik.
 
 ## Keputusan penyuntingan
 - Jangan mengubah kata secara global jika dapat mengubah maksud.
-- Pertahankan inti yang benar; jangan menambah fakta, pengalaman, tempat, angka, atau alasan yang tidak ada di sumber.
-- Jika jawaban sumber salah atau tidak nyambung, jangan sekadar memperhalus tata bahasa: tulis ulang dengan jawaban yang relevan atau buang.
+- Pertahankan inti yang benar; jangan menambah fakta atau alasan yang tidak ada di sumber.
+- Jika jawaban sumber salah atau tidak nyambung, tulis ulang dengan jawaban yang relevan atau buang.
 - Gunakan `aku-kamu` untuk percakapan akrab dan `saya-Anda` untuk percakapan sopan; konsisten dalam satu dialog.
-- Hindari dialog yang membuat asisten seolah benar-benar memiliki tubuh, rumah, kendaraan, keluarga, atau pengalaman pribadi, kecuali konteksnya jelas merupakan permainan peran.
 - Topik pasar, makanan, kebun, keluarga, sekolah, pekerjaan, dan perjalanan tetap dapat dipakai. Jangan mengeluarkan topik hanya karena menyebut toko atau tempat umum; yang dikeluarkan adalah topik digital/perangkat yang memang tidak sesuai fokus.
 
 ## Pilot penyuntingan
 File `data/curated/intisari_v4/pilot_edited_10.jsonl` memuat 10 contoh hasil suntingan awal. Semua diberi status `pilot_edited_not_training_ready`; contoh tersebut belum boleh dicampur ke dataset pelatihan sebelum ditinjau kembali.
 
+## Catatan penilaian ulang
+Label audit tahap 2 dibuat dengan pedoman lama. Jika alasan buang/tulis ulang hanya karena asisten mengaku memiliki tubuh, pekerjaan, keluarga, hewan, atau pengalaman, label tersebut wajib ditinjau ulang. Jangan mengubah keputusan tanpa membaca dialog lengkap dan memeriksa mutu lainnya.
+
 ## Kesimpulan
-Penyaringan mekanis tahap 1 terlalu longgar untuk dijadikan penentu mutu. 31.497 calon tidak boleh disebut data bersih. Tahap selanjutnya harus menggabungkan aturan mekanis dengan audit semantik bertahap. Sampel ini menunjukkan bahwa korpus sumber perlu diseleksi dengan ketat, bukan sekadar diperbaiki ejaannya.
+Penyaringan mekanis tahap 1 terlalu longgar untuk dijadikan penentu mutu. Calon tidak boleh disebut data bersih. Tahap selanjutnya harus menggabungkan aturan mekanis dengan audit semantik bertahap.
 
 **Training tetap dinonaktifkan.** Tidak ada data dari tahap ini yang dinyatakan siap latih.
