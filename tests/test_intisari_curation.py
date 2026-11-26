@@ -117,7 +117,7 @@ class ThreeStageCurationTests(unittest.TestCase):
             src.write_text(json.dumps({"id":"x","messages":[
                 {"role":"user","content":"Kamu pernah ke pantai bersama keluarga?"},
                 {"role":"assistant","content":"Pernah, aku pergi bersama adikku bulan lalu."}
-            ]},ensure_ascii=False)+"\\n",encoding="utf-8")
+            ]},ensure_ascii=False)+"\n",encoding="utf-8")
             report=stage3(src,root)
             self.assertEqual(report["needs_human_review"],0)
             self.assertEqual(report["no_obvious_mechanical_issue_not_semantically_approved"],1)
@@ -133,6 +133,6 @@ class ThreeStageCurationTests(unittest.TestCase):
                 {"role":"user","content":"Aku mau bertanya."},
                 {"role":"user","content":"Tentang makanan."},
                 {"role":"assistant","content":"Silakan bertanya."}
-            ]},ensure_ascii=False)+"\\n",encoding="utf-8")
+            ]},ensure_ascii=False)+"\n",encoding="utf-8")
             report=stage3(src,root)
             self.assertEqual(report["needs_human_review"],1)
