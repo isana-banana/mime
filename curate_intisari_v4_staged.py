@@ -36,8 +36,8 @@ AMBIGUOUS_PATTERNS = {
 SLANG_MAP = {
     "gue":"aku", "gua":"aku", "gw":"aku",
     "lo":"kamu", "lu":"kamu", "elo":"kamu", "elu":"kamu",
-    "saya":"aku", "anda":"kamu",
 }
+FORMAL_TO_CASUAL_MAP = {"saya":"aku", "anda":"kamu"}
 SLANG_RE = re.compile(r"\b(?:gue|gua|gw|lo|lu|elo|elu)\b", re.I)
 WORD_RE = re.compile(r"\b([\w]+)(?:\s+\1){1,}\b", re.I)
 PLACEHOLDER_RE = re.compile(r"(?:\.{3,}|\[/?(?:nama|jawaban|isi|teks)\])", re.I)
@@ -107,15 +107,20 @@ def stage1(input_path: Path, out: Path):
             "exclusion_reason_counts":dict(categories.most_common()),
             "training_ready":False}
 
-def replace_words(text: str):
-    pat=re.compile(r"\b("+"|".join(SLANG_MAP)+r")\b",re.I)
-    changes=[]
+def replace_words(text: str, casual_register: bool = False):
+    mapping = dict(SLANG_MAP)
+    if casual_register:
+        mapping.update(FORMAL_TO_CASUAL_MAP)
+    pat = re.compile(r"\\b(" + "|".join(mapping) + r")\\b", re.I)
+    changes = []
     def sub(m):
-        old=m.group(0); new=SLANG_MAP[old.lower()]
-        if old[:1].isupper(): new=new.capitalize()
-        changes.append((old,new))
+        old = m.group(0)
+        new = mapping[old.lower()]
+        if old[:1].isupper():
+            new = new.capitalize()
+        changes.append((old, new))
         return new
-    return pat.sub(sub,text),changes
+    return pat.sub(sub, text), changes
 
 def stage2(in_path: Path, out: Path):
     clean=[]; changed_records=0; changed_tokens=collections.Counter(); changed_ids=[]
@@ -123,11 +128,15 @@ def stage2(in_path: Path, out: Path):
     for _,item in load_jsonl(in_path):
         if item is None: continue
         msgs=messages_of(item); new_msgs=[]; record_changes=[]
+        joined_before = text_of(msgs)
+        # Preserve formal saya-Anda dialogues. Convert those words only when
+        # the conversation already uses a familiar aku-kamu/slang register.
+        casual_register = bool(re.search(r"\\b(?:gue|gua|gw|lo|lu|elo|elu|aku|kamu)\\b", joined_before, re.I))
         for m in msgs:
             if not isinstance(m,dict):
                 new_msgs.append(m); continue
             content=str(m.get("content",""))
-            new,changes=replace_words(content)
+            new,changes=replace_words(content, casual_register=casual_register)
             m2=dict(m); m2["content"]=new; new_msgs.append(m2)
             record_changes.extend(changes)
         rec=dict(item); rec["messages"]=new_msgs
