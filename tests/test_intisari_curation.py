@@ -220,17 +220,17 @@ class Stage1ManualBatchTests(unittest.TestCase):
         prior_ids.update(json.loads(line)["id"] for line in path.read_text(encoding="utf-8").splitlines() if line)
         self.assertFalse(set(ids) & prior_ids)
 
-    def test_progress_matches_batch11_and_remaining_queue(self):
+    def test_progress_matches_batch12_completed_stage1(self):
         import json
         from pathlib import Path
 
         root = Path(__file__).resolve().parents[1]
         progress = json.loads((root / "data/curated/intisari_v4/three_stage_manual_audit_progress.json").read_text(encoding="utf-8"))
-        self.assertEqual(progress["stage1_unique_manual_reviewed"], 1318)
-        self.assertEqual(progress["stage1_unique_manual_review_remaining"], 362)
-        self.assertEqual(progress["stage1_mixed_remaining"], 109)
-        self.assertEqual(progress["stage1_ambiguous_only_remaining"], 253)
-        self.assertEqual(progress["stage1_unique_decisions"], {"keep_in_scope": 365, "exclude_digital_topic": 953})
+        self.assertEqual(progress["stage1_unique_manual_reviewed"], 1680)
+        self.assertEqual(progress["stage1_unique_manual_review_remaining"], 0)
+        self.assertEqual(progress["stage1_mixed_remaining"], 0)
+        self.assertEqual(progress["stage1_ambiguous_only_remaining"], 0)
+        self.assertEqual(progress["stage1_unique_decisions"], {"keep_in_scope": 588, "exclude_digital_topic": 1092})
 
 
     def test_batch12_closes_all_stage1_manual_queues(self):
