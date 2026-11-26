@@ -111,7 +111,7 @@ def replace_words(text: str, casual_register: bool = False):
     mapping = dict(SLANG_MAP)
     if casual_register:
         mapping.update(FORMAL_TO_CASUAL_MAP)
-    pat = re.compile(r"\\b(" + "|".join(mapping) + r")\\b", re.I)
+    pat = re.compile(r"\b(" + "|".join(mapping) + r")\b", re.I)
     changes = []
     def sub(m):
         old = m.group(0)
@@ -131,7 +131,7 @@ def stage2(in_path: Path, out: Path):
         joined_before = text_of(msgs)
         # Preserve formal saya-Anda dialogues. Convert those words only when
         # the conversation already uses a familiar aku-kamu/slang register.
-        casual_register = bool(re.search(r"\\b(?:gue|gua|gw|lo|lu|elo|elu|aku|kamu)\\b", joined_before, re.I))
+        casual_register = bool(re.search(r"\b(?:gue|gua|gw|lo|lu|elo|elu|aku|kamu)\b", joined_before, re.I))
         for m in msgs:
             if not isinstance(m,dict):
                 new_msgs.append(m); continue
