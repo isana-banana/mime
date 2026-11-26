@@ -19,19 +19,20 @@
 | **Total** | **50** | **100%** |
 
 ## Temuan utama
-1. Asisten sering mengarang kehidupan pribadi: pekerjaan, kebiasaan makan, kesukaan, pengalaman wisata, atau kemampuan fisik.
-2. Jawaban sering mengulang pertanyaan, tidak memberi informasi yang diminta, atau menjawab dengan fakta yang keliru.
-3. Kerusakan bahasa mencakup kata tidak bermakna, salah ketik berat, dan kalimat yang kehilangan hubungan makna.
-4. Nama tempat, istilah transportasi, dan pengetahuan umum perlu diperiksa; jangan mempertahankan jawaban hanya karena terdengar lancar.
-5. Dialog yang membahas resep, belanja di toko fisik, kuliah, pekerjaan, wisata, dan kegiatan harian tetap berada dalam cakupan topik. Mutu isi tetap menjadi syarat.
-6. Satu contoh permainan digital dikeluarkan sesuai batas topik. Satu contoh lain dibuang karena label pembicara tertanam di dalam isi pesan.
+1. Jawaban sering mengulang pertanyaan, tidak memberi informasi yang diminta, atau menjawab dengan fakta yang keliru.
+2. Kerusakan bahasa mencakup kata tidak bermakna, salah ketik berat, dan kalimat yang kehilangan hubungan makna.
+3. Nama tempat, istilah transportasi, dan pengetahuan umum perlu diperiksa; jangan mempertahankan jawaban hanya karena terdengar lancar.
+4. Dialog yang membahas resep, belanja di toko fisik, kuliah, pekerjaan, wisata, dan kegiatan harian tetap berada dalam cakupan topik.
+5. Satu contoh permainan digital dikeluarkan sesuai batas topik. Satu contoh lain dibuang karena label pembicara tertanam di dalam isi pesan.
+6. Catatan awal tentang asisten yang punya pekerjaan, kebiasaan, kesukaan, pengalaman wisata, atau kemampuan fisik **bukan alasan penolakan dengan sendirinya**. Periksa apakah persona konsisten, relevan, dan bahasanya baik.
 
 ## Catatan penyuntingan
 - Contoh `keep_light_edit` masih harus melewati pemeriksaan ejaan, konsistensi sapaan, dan mutu akhir.
-- Contoh `rewrite` harus ditulis ulang dengan menjaga maksud pengguna, tidak menambah pengalaman palsu, dan tidak mengarang fakta.
+- Contoh `rewrite` harus ditulis ulang dengan menjaga maksud, termasuk detail persona yang memang ada dalam sumber.
+- Jangan menambah pengalaman atau fakta dunia nyata saat memperbaiki dialog.
 - Contoh resep atau informasi tempat yang tidak jelas tidak boleh diperbaiki dengan menebak.
 
 ## Status
-Semua 50 contoh tetap `training_ready: false`. Training tetap dinonaktifkan.
+Label batch ini dibuat dengan pedoman lama; contoh yang mungkin terpengaruh alasan persona harus ditinjau ulang. Semua 50 contoh tetap `training_ready: false`. Training tetap dinonaktifkan.
 
 Rincian keputusan per ID tersimpan di `data/curated/intisari_v4/manual_audit_batch3_50.jsonl`.
