@@ -75,9 +75,9 @@ def stage1(input_path: Path, out: Path):
         hits=[name for name,pat in DIGITAL_RE.items() if pat.search(joined)]
         # A single incidental internet/web mention inside a clearly offline conversation
         # is not enough to discard the whole dialogue; retain it for manual context review.
+        digital_match_count=sum(len(pat.findall(joined)) for pat in DIGITAL_RE.values())
         mixed_context=(
-            hits == ["internet_web"]
-            and len(DIGITAL_RE["internet_web"].findall(joined)) == 1
+            digital_match_count == 1
             and bool(OFFLINE_CONTEXT_RE.search(joined))
         )
         amb=[name for name,pat in AMBIGUOUS_PATTERNS.items() if pat.search(joined)]
