@@ -1,0 +1,26 @@
+{
+  "source": "INTISARI/intisari-indonesian-chat-v4",
+  "source_records": 50047,
+  "stage1_mixed_queue_total": 1427,
+  "stage1_manual_reviewed": 25,
+  "stage1_manual_remaining": 1402,
+  "stage1_batches": [
+    {
+      "batch": "batch1",
+      "file": "data/curated/intisari_v4/stage1_manual_audit_batch1_25.jsonl",
+      "report": "docs/INTISARI_V4_STAGE1_MANUAL_AUDIT_BATCH1.md",
+      "reviewed": 25,
+      "keep_in_scope": 7,
+      "exclude_digital_topic": 18
+    }
+  ],
+  "stage3_manual_pilot": {
+    "reviewed": 20,
+    "file": "data/curated/intisari_v4/stage3_manual_audit_batch1_20.jsonl",
+    "report": "docs/INTISARI_V4_STAGE3_MANUAL_AUDIT_BATCH1.md",
+    "rewrite": 13,
+    "discard": 4,
+    "discard_structure": 3
+  },
+  "training_ready": false
+}
