@@ -23,11 +23,11 @@ Branch: `experiment/intisari-v4-curation`
 
 Catatan: 1.427 contoh campuran dan 346 contoh ambigu dapat saling tumpang tindih. Contoh belanja di pasar, warung, supermarket, dan mal tidak otomatis dibuang karena menyebut internet, website, atau media sosial sekilas.
 
-Audit manual atas 145 ID unik dari contoh campuran:
+Audit manual atas 143 ID unik dari contoh campuran:
 - 60 dipertahankan dalam cakupan.
-- 85 dikeluarkan sebagai topik digital.
-- Enam batch berisi 150 baris audit, dengan lima baris ID duplikat dari batch sebelumnya; jumlah kemajuan dihitung berdasarkan 145 ID unik.
-- Masih ada 1.282 contoh campuran dan 253 contoh ambigu saja yang belum diperiksa, total 1.535 ID unik.
+- 83 dikeluarkan sebagai topik digital.
+- Enam batch berisi 150 baris audit. Tujuh baris merupakan ID duplikat yang sudah tercatat pada batch sebelumnya; penghitungan kemajuan menggunakan ID unik.
+- Masih ada 1.284 contoh campuran dan 253 contoh ambigu saja yang belum diperiksa, total 1.537 ID unik.
 
 
 ### Tahap 2 — Penyeragaman kata ganti
