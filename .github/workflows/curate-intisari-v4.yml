@@ -10,6 +10,10 @@ on:
       - "data/external/intisari_v4/intisari_v4.jsonl"
       - "tests/test_intisari_curation.py"
       - "docs/INTISARI_V4_THREE_STAGE_PLAN.md"
+      - "data/curated/intisari_v4/stage1_manual_audit_batch*.jsonl"
+      - "data/curated/intisari_v4/three_stage_manual_audit_progress.json"
+      - "docs/INTISARI_V4_STAGE1_MANUAL_AUDIT_BATCH*.md"
+      - "docs/INTISARI_V4_THREE_STAGE_FULL_RUN_2026-11-26.md"
   workflow_dispatch:
 
 permissions:
