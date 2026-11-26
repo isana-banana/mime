@@ -85,3 +85,8 @@ Workflow: https://github.com/isana-banana/mime/actions/runs/45796983660
 Rincian batch kesembilan: 25 ID baru diperiksa; 7 dipertahankan dan 18 dikeluarkan. Tidak ada ID duplikat pada batch ini. Laporan: `docs/INTISARI_V4_STAGE1_MANUAL_AUDIT_BATCH9.md`.
 
 Rincian batch kesepuluh: 100 ID baru diperiksa; 37 dipertahankan dan 63 dikeluarkan. Tidak ada ID duplikat pada batch ini. Laporan: `docs/INTISARI_V4_STAGE1_MANUAL_AUDIT_BATCH10.md`.
+
+
+## Perubahan ukuran batch audit manual
+
+Mulai batch berikutnya, ukuran batch resmi ditetapkan menjadi **1.000 ID baru**. Agar pemeriksaan percakapan tetap teliti dan tidak hanya mengandalkan kata kunci, pelaksanaan dapat dibagi menjadi 10 subkelompok internal berisi 100 ID. Hasilnya baru dicatat sebagai satu batch 1.000 setelah semua percakapan diperiksa dan keputusan tiap ID selesai. ID yang belum diperiksa tidak dihitung sebagai kemajuan. Posisi terakhir tetap 318 dari 1.680 ID unik; antrean manual yang tersisa 1.362 ID (1.109 campuran dan 253 ambigu saja). Semua keluaran tetap `training_ready=false`.
