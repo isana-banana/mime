@@ -10,7 +10,7 @@ File sumber `data/external/intisari_v4/intisari_v4.jsonl` tidak boleh diubah. Se
 
 - Keluarkan percakapan yang jelas membahas internet, media sosial, aplikasi, akun digital, perangkat komputasi, layanan daring, game digital, pemrograman, atau topik komputasi.
 - Percakapan belanja langsung di pasar, toko, supermarket, dan mal tetap masuk cakupan.
-- Kata yang ambigu seperti presentasi, slide, kamera, layar, video, dan televisi tidak otomatis dibuang. Catat untuk pemeriksaan konteks.\n- Sebutan internet/web yang hanya muncul sekali di tengah dialog yang jelas membahas kegiatan luring (misalnya pasar, supermarket, memasak, atau perjalanan) masuk antrean campuran, bukan langsung dibuang.\n- Penyebutan permainan umum tidak otomatis dianggap topik digital; hanya gim digital yang disebut secara jelas yang dikeluarkan.
+- Kata yang ambigu seperti presentasi, slide, kamera, layar, video, dan televisi tidak otomatis dibuang. Catat untuk pemeriksaan konteks.\n- Satu penyebutan digital yang hanya muncul sekali di tengah dialog yang jelas membahas kegiatan luring (misalnya pasar, olahraga, supermarket, memasak, atau perjalanan) masuk antrean campuran, bukan langsung dibuang.\n- Penyebutan permainan umum tidak otomatis dianggap topik digital; hanya gim digital yang disebut secara jelas yang dikeluarkan.
 - Hasil: `stage1_in_scope.jsonl`, `stage1_excluded_digital.jsonl`, `stage1_ambiguous_review.jsonl`.
 
 ## Tahap 2 — Bahasa dan kata ganti
