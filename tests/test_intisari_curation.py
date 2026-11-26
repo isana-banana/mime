@@ -275,18 +275,18 @@ class Stage1ManualBatchTests(unittest.TestCase):
             manual = root / "manual"
             manual.mkdir()
             (root / "stage1_in_scope.jsonl").write_text(
-                json.dumps({"id": "a", "messages": []}) + "\\n" +
-                json.dumps({"id": "b", "messages": []}) + "\\n" +
-                json.dumps({"id": "c", "messages": []}) + "\\n",
+                json.dumps({"id": "a", "messages": []}) + "\n" +
+                json.dumps({"id": "b", "messages": []}) + "\n" +
+                json.dumps({"id": "c", "messages": []}) + "\n",
                 encoding="utf-8",
             )
             (root / "stage1_excluded_digital.jsonl").write_text(
-                json.dumps({"id": "z", "messages": []}) + "\\n",
+                json.dumps({"id": "z", "messages": []}) + "\n",
                 encoding="utf-8",
             )
             (manual / "stage1_manual_audit_batch1_2.jsonl").write_text(
-                json.dumps({"id": "a", "decision": "keep_in_scope"}) + "\\n" +
-                json.dumps({"id": "b", "decision": "exclude_digital_topic"}) + "\\n",
+                json.dumps({"id": "a", "decision": "keep_in_scope"}) + "\n" +
+                json.dumps({"id": "b", "decision": "exclude_digital_topic"}) + "\n",
                 encoding="utf-8",
             )
             report = apply_manual_stage1_decisions(root, manual, {"stage1_in_scope": 3, "excluded_digital": 1})
