@@ -23,7 +23,7 @@ Branch: `experiment/intisari-v4-curation`
 
 Catatan: 1.427 contoh campuran dan 346 contoh ambigu dapat saling tumpang tindih. Contoh belanja di pasar, warung, supermarket, dan mal tidak otomatis dibuang karena menyebut internet, website, atau media sosial sekilas.
 
-Audit manual pertama atas 25 contoh campuran:
+Audit manual atas 120 ID unik dari contoh campuran:
 - 7 dipertahankan.
 - 18 dikeluarkan sebagai topik digital.
 - Masih ada 1.402 contoh campuran yang belum diaudit manual.
