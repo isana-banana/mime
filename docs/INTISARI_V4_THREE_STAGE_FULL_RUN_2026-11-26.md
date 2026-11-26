@@ -23,11 +23,11 @@ Branch: `experiment/intisari-v4-curation`
 
 Catatan: 1.427 contoh campuran dan 346 contoh ambigu dapat saling tumpang tindih. Contoh belanja di pasar, warung, supermarket, dan mal tidak otomatis dibuang karena menyebut internet, website, atau media sosial sekilas.
 
-Audit manual atas 318 ID unik dari contoh campuran:
-- 125 dipertahankan dalam cakupan.
-- 193 dikeluarkan sebagai topik digital.
-- Sepuluh batch berisi 325 baris audit. Tujuh baris merupakan ID duplikat yang sudah tercatat pada batch sebelumnya; penghitungan kemajuan menggunakan ID unik.
-- Masih ada 1.109 contoh campuran dan 253 contoh ambigu saja yang belum diperiksa, total 1.362 ID unik.
+Audit manual atas 1.318 ID unik dari antrean manual Tahap 1:
+- 365 dipertahankan dalam cakupan.
+- 953 dikeluarkan sebagai topik digital.
+- Sebelas batch berisi 1.325 baris audit. Tujuh baris merupakan ID duplikat dari batch sebelumnya; kemajuan dihitung berdasarkan ID unik.
+- Masih ada 109 contoh campuran dan 253 contoh ambigu saja yang belum diperiksa, total 362 ID unik.
 
 
 Rincian batch ketujuh: 25 ID baru diperiksa; 9 dipertahankan dan 16 dikeluarkan. Tidak ada ID duplikat pada batch ini. Laporan: `docs/INTISARI_V4_STAGE1_MANUAL_AUDIT_BATCH7.md`.
@@ -89,4 +89,15 @@ Rincian batch kesepuluh: 100 ID baru diperiksa; 37 dipertahankan dan 63 dikeluar
 
 ## Perubahan ukuran batch audit manual
 
-Mulai batch berikutnya, ukuran batch resmi ditetapkan menjadi **1.000 ID baru**. Agar pemeriksaan percakapan tetap teliti dan tidak hanya mengandalkan kata kunci, pelaksanaan dapat dibagi menjadi 10 subkelompok internal berisi 100 ID. Hasilnya baru dicatat sebagai satu batch 1.000 setelah semua percakapan diperiksa dan keputusan tiap ID selesai. ID yang belum diperiksa tidak dihitung sebagai kemajuan. Posisi terakhir tetap 318 dari 1.680 ID unik; antrean manual yang tersisa 1.362 ID (1.109 campuran dan 253 ambigu saja). Semua keluaran tetap `training_ready=false`.
+Mulai batch berikutnya, ukuran batch resmi ditetapkan menjadi **1.000 ID baru**. Agar pemeriksaan percakapan tetap teliti dan tidak hanya mengandalkan kata kunci, pelaksanaan dapat dibagi menjadi 10 subkelompok internal berisi 100 ID. Hasilnya baru dicatat sebagai satu batch 1.000 setelah semua percakapan diperiksa dan keputusan tiap ID selesai. ID yang belum diperiksa tidak dihitung sebagai kemajuan. Posisi terakhir setelah Batch 11 adalah 1.318 dari 1.680 ID unik; antrean manual yang tersisa 362 ID (109 campuran dan 253 ambigu saja). Semua keluaran tetap `training_ready=false`.
+
+
+Rincian batch kesebelas: 1.000 ID baru diperiksa; 240 dipertahankan dan 760 dikeluarkan. Tidak ada ID duplikat. Laporan: `docs/INTISARI_V4_STAGE1_MANUAL_AUDIT_BATCH11.md`.
+
+## Status terbaru setelah Batch 11
+
+- Kemajuan audit manual Tahap 1: **1.318/1.680 ID unik (78,45%)**.
+- Sisa: **362 ID unik**, terdiri dari 109 contoh campuran dan 253 contoh ambigu saja.
+- Batch 12 akan memeriksa seluruh sisa 362 ID; setelah itu Tahap 1 manual selesai.
+- Keputusan kumulatif sementara: 365 dipertahankan dan 953 dikeluarkan.
+- Seluruh data tetap `training_ready=false`.
