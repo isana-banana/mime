@@ -179,6 +179,72 @@ def stage3(in_path: Path, out: Path):
             "needs_human_review":len(review),"no_obvious_mechanical_issue_not_semantically_approved":len(no_flag),
             "review_reason_counts":dict(reasons.most_common()),"training_ready":False}
 
+
+def apply_manual_stage1_decisions(out: Path, manual_dir: Path, stage1_report=None):
+    """Apply the completed human-reviewed Stage 1 decisions before Stage 2."""
+    manual_files = sorted(manual_dir.glob("stage1_manual_audit_batch*.jsonl"))
+    decisions = {}
+    rows = 0
+    for path in manual_files:
+        for line_no, item in load_jsonl(path):
+            if item is None:
+                raise ValueError(f"Malformed manual audit row: {path}:{line_no}")
+            rows += 1
+            record_id = item.get("id")
+            decision = item.get("decision")
+            if not record_id or decision not in {"keep_in_scope", "exclude_digital_topic"}:
+                raise ValueError(f"Invalid manual audit row: {path}:{line_no}")
+            previous = decisions.get(record_id)
+            if previous is not None and previous != decision:
+                raise ValueError(f"Conflicting manual decisions for {record_id}")
+            decisions[record_id] = decision
+
+    if not decisions:
+        return stage1_report or {}
+
+    in_scope = [item for _, item in load_jsonl(out / "stage1_in_scope.jsonl") if item is not None]
+    excluded = [item for _, item in load_jsonl(out / "stage1_excluded_digital.jsonl") if item is not None]
+    in_scope_ids = {item.get("id") for item in in_scope}
+    missing = sorted(set(decisions) - in_scope_ids)
+    if missing:
+        raise ValueError(f"Manual Stage 1 IDs missing from automatic in-scope output: {missing[:10]}")
+
+    kept = []
+    manually_excluded = []
+    for record in in_scope:
+        decision = decisions.get(record.get("id"))
+        updated = dict(record)
+        if decision == "exclude_digital_topic":
+            updated["stage1_decision"] = "exclude_digital_topic_manual"
+            updated["stage1_manual_audit_decision"] = decision
+            manually_excluded.append(updated)
+        elif decision == "keep_in_scope":
+            updated["stage1_decision"] = "in_scope_manual_approved"
+            updated["stage1_manual_audit_decision"] = decision
+            kept.append(updated)
+        else:
+            kept.append(updated)
+
+    excluded.extend(manually_excluded)
+    write_jsonl(out / "stage1_in_scope.jsonl", kept)
+    write_jsonl(out / "stage1_excluded_digital.jsonl", excluded)
+
+    report = dict(stage1_report or {})
+    report.update({
+        "stage1_in_scope_before_manual": len(in_scope),
+        "excluded_digital_before_manual": len(excluded) - len(manually_excluded),
+        "manual_audit_rows": rows,
+        "manual_audit_unique_ids": len(decisions),
+        "manual_audit_duplicate_rows": rows - len(decisions),
+        "manual_audit_keep": sum(value == "keep_in_scope" for value in decisions.values()),
+        "manual_audit_exclude": sum(value == "exclude_digital_topic" for value in decisions.values()),
+        "stage1_in_scope": len(kept),
+        "excluded_digital": len(excluded),
+        "manual_stage1_decisions_applied": True,
+        "training_ready": False,
+    })
+    return report
+
 def main():
     p=argparse.ArgumentParser()
     p.add_argument("--input",default="data/external/intisari_v4/intisari_v4.jsonl")
@@ -187,6 +253,7 @@ def main():
     src=Path(a.input); out=Path(a.output_dir); out.mkdir(parents=True,exist_ok=True)
     reports={}
     reports["stage1"]=stage1(src,out)
+    reports["stage1"]=apply_manual_stage1_decisions(out, Path("data/curated/intisari_v4"), reports["stage1"])
     reports["stage2"]=stage2(out/"stage1_in_scope.jsonl",out)
     reports["stage3"]=stage3(out/"stage2_language_normalized.jsonl",out)
     reports["source_sha256"]=hashlib.sha256(src.read_bytes()).hexdigest()
