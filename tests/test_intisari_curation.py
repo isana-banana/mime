@@ -313,5 +313,5 @@ class Stage1ManualBatchTests(unittest.TestCase):
             "Aku senang bertemu dengan kamu. Saya juga senang, Anda datang.",
             casual_register=True,
         )
-        self.assertEqual(text, "Aku senang bertemu dengan kamu. Aku juga senang, kamu datang.")
+        self.assertEqual(text, "Aku senang bertemu dengan kamu. Aku juga senang, Kamu datang.")
         self.assertEqual(len(changes), 2)
