@@ -136,3 +136,29 @@ class ThreeStageCurationTests(unittest.TestCase):
             ]},ensure_ascii=False)+"\n",encoding="utf-8")
             report=stage3(src,root)
             self.assertEqual(report["needs_human_review"],1)
+
+
+    def test_incidental_internet_mention_in_offline_market_dialogue_is_reviewed_not_excluded(self):
+        from curate_intisari_v4_staged import stage1
+        import json, tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            src=root/"source.jsonl"
+            src.write_text(json.dumps({"messages":[
+                {"role":"user","content":"Aku mau ke pasar membeli sayur."},
+                {"role":"assistant","content":"Kalau perlu, kamu bisa mencari informasi di internet."}
+            ]},ensure_ascii=False)+"\n",encoding="utf-8")
+            report=stage1(src,root)
+            self.assertEqual(report["excluded_digital"],0)
+            self.assertEqual(report["mixed_offline_context_records_kept_for_review"],1)
+
+    def test_generic_board_game_mention_is_not_automatically_digital(self):
+        from curate_intisari_v4_staged import DIGITAL_RE
+        text="Kalau hujan, kita bisa bermain permainan bersama di rumah."
+        self.assertFalse(any(pattern.search(text) for pattern in DIGITAL_RE.values()))
+
+    def test_online_shop_as_main_topic_is_excluded(self):
+        from curate_intisari_v4_staged import DIGITAL_RE
+        text="Aku mau belanja online di online shop."
+        self.assertTrue(DIGITAL_RE["digital_services"].search(text))
