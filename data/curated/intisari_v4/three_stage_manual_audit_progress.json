@@ -124,14 +124,14 @@
     "rewrite": 13,
     "discard": 4,
     "discard_structure": 3,
-    "status": "provisional_only_not_final_until_stage1_and_stage2_complete"
+    "status": "provisional_only_not_final_until_stage3_full_semantic_audit"
   },
   "training_ready": false,
   "stage1_mixed_remaining": 0,
   "stage1_unique_manual_reviewed": 1680,
   "stage1_unique_manual_review_remaining": 0,
-  "stage2_status": "ready_to_rerun_after_stage1_manual_completion",
-  "stage3_status": "pilot_only_pending_stage2_final_and_stage3_full_audit",
+  "stage2_status": "mechanical_normalization_complete_zero_residual_slang_formal_register_preserved",
+  "stage3_status": "mechanical_scan_complete_semantic_manual_audit_pending",
   "stage1_manual_rows_recorded": 1687,
   "stage1_ambiguous_only_remaining": 0,
   "stage1_manual_duplicate_rows": 7,
@@ -141,5 +141,36 @@
   },
   "stage1_manual_batch_size": 1000,
   "stage1_next_batch_target": 0,
-  "stage1_next_batch_note": "Audit manual Tahap 1 selesai. Seluruh 1.427 contoh campuran dan 253 contoh ambigu saja sudah diperiksa; tidak ada batch manual lanjutan."
+  "stage1_next_batch_note": "Audit manual Tahap 1 selesai. Seluruh 1.427 contoh campuran dan 253 contoh ambigu saja sudah diperiksa; tidak ada batch manual lanjutan.",
+  "stage2_results": {
+    "records_processed": 45717,
+    "records_changed": 24783,
+    "replacement_counts_by_original_word": {
+      "gue": 58788,
+      "gua": 15,
+      "gw": 3,
+      "lo": 7361,
+      "saya": 7176,
+      "anda": 7
+    },
+    "residual_slang_counts": {},
+    "formal_saya_anda_register_preserved": true,
+    "training_ready": false
+  },
+  "stage3_results": {
+    "records_processed": 45717,
+    "needs_human_review": 8460,
+    "no_obvious_mechanical_issue_not_semantically_approved": 37257,
+    "review_reason_counts": {
+      "struktur_giliran": 4884,
+      "pengulangan_kata": 1723,
+      "placeholder": 1255,
+      "terlalu_banyak_giliran": 1077,
+      "kata_rusak_dikenali": 548,
+      "pesan_sangat_pendek": 266,
+      "terlalu_panjang": 1,
+      "teks_mencurigakan": 1
+    },
+    "training_ready": false
+  }
 }
