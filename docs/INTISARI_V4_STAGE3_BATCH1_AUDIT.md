@@ -16,15 +16,15 @@
 | Keluarkan karena topik | 2 | 4% |
 | **Total** | **50** | **100%** |
 
-Hanya 2 contoh cukup baik dengan perbaikan kecil. Hasil ini hanya berlaku untuk batch ini, bukan angka pasti seluruh 30.625 calon.
+Hanya 2 contoh cukup baik dengan perbaikan kecil. Hasil ini hanya berlaku untuk batch ini, bukan angka pasti seluruh 30.625 calon. Label ini dicatat dengan pedoman audit saat itu dan belum otomatis disahkan sebagai label akhir.
 
-## Masalah utama
-1. Asisten mengarang kehidupan pribadi: uang, buku, teman, kesukaan, atau pengalaman bepergian.
-2. Jawaban tidak menjawab pertanyaan, berpindah topik, atau hanya mengulang kata pengguna.
-3. Bahasa rusak: kata salah, susunan kalimat kacau, dan pesan terpotong.
-4. Mengarang fakta: nama orang, tempat, acara, jumlah uang, atau informasi perjalanan.
-5. Konteks tidak cukup untuk memahami pertanyaan.
-6. Saran tidak membantu dan memakai sudut pandang yang salah.
+## Masalah yang dicatat saat audit awal
+- Jawaban tidak menjawab pertanyaan, berpindah topik, atau hanya mengulang kata pengguna.
+- Bahasa rusak: kata salah, susunan kalimat kacau, dan pesan terpotong.
+- Klaim fakta dunia nyata yang keliru atau tidak berdasar.
+- Konteks tidak cukup untuk memahami pertanyaan.
+- Saran tidak membantu dan memakai sudut pandang yang salah.
+- Beberapa catatan awal menganggap cerita kehidupan pribadi asisten sebagai masalah. **Alasan ini tidak lagi berlaku dengan sendirinya** dan harus diperiksa ulang berdasarkan aturan persona terbaru.
 
 ## Batas topik
 - Hotspot, akun, dan sinyal/koneksi termasuk topik digital dan dikeluarkan.
@@ -32,6 +32,6 @@ Hanya 2 contoh cukup baik dengan perbaikan kecil. Hasil ini hanya berlaku untuk 
 - Pertemuan kerja biasa tidak otomatis dianggap topik digital.
 
 ## Tindak lanjut
+- Audit ulang label yang mungkin dipengaruhi aturan persona lama sebelum menggabungkan hasil batch.
 - Label `keep_light_edit` dan `rewrite` belum berarti siap latih.
-- Batch berikutnya harus memakai ID baru dan menyimpan seed, keputusan, serta alasan.
-- Audit dilanjutkan bertahap; training tetap dinonaktifkan sampai audit semantik dan persetujuan selesai.
+- Training tetap dinonaktifkan sampai audit semantik dan persetujuan selesai.
