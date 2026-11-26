@@ -24,7 +24,7 @@ DIGITAL_PATTERNS = {
 }
 DIGITAL_RE = {k: re.compile(v, re.I) for k,v in DIGITAL_PATTERNS.items()}
 OFFLINE_CONTEXT_RE = re.compile(
-    r"\b(?:pasar|supermarket|mal|mall|toko|warung|belanja|berbelanja|masak|memasak|makanan|masakan|sayur|ayam|baju|pakaian|kebun|sawah|kucing|anjing|hujan|cuaca|rapat|sekolah|kampus|kantor|perjalanan|kereta|krl|olahraga|futsal|badminton|sepak bola|voli|latihan|resep|promo|diskon|sepatu|buku|keluarga|adik|teman|hobi|film|musik|kartu|catur)\b",
+    r"\b(?:pasar|supermarket|mal|mall|warung|masak|memasak|makanan|masakan|sayur|ayam|kebun|sawah|kucing|anjing|hujan|cuaca|rapat|sekolah|kampus|kantor|perjalanan|kereta|krl|olahraga|futsal|badminton|sepak bola|voli|latihan|resep|keluarga|adik|teman|hobi|film|musik|kartu|catur)\b",
     re.I,
 )
 
@@ -80,7 +80,6 @@ def stage1(input_path: Path, out: Path):
         online_commerce_hits=len(DIGITAL_RE["digital_services"].findall(joined))
         mixed_context=(
             offline_anchor
-            and online_commerce_hits < 2
             and "computing_topics" not in hits
         )
         amb=[name for name,pat in AMBIGUOUS_PATTERNS.items() if pat.search(joined)]
