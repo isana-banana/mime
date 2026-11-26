@@ -38,30 +38,30 @@ Rincian batch kedelapan: 25 ID baru diperiksa; 12 dipertahankan dan 13 dikeluark
 
 | Hasil | Jumlah |
 |---|---:|
-| Percakapan yang diproses | 46.809 |
-| Percakapan yang berubah | 27.885 |
+| Percakapan yang diproses | 45.717 |
+| Percakapan yang berubah | 24.783 |
 | Sisa variasi gue/gua/gw/lo/lu/elo/elu setelah penggantian | 0 |
 
 Penggantian token:
-- `gue` → `aku`: 61.121
-- `gua` → `aku`: 17
+- `gue` → `aku`: 58.788
+- `gua` → `aku`: 15
 - `gw` → `aku`: 3
-- `lo` → `kamu`: 7.718
-- Penyesuaian `saya` → `aku`: 12.484
-- Penyesuaian `anda` → `kamu`: 259
+- `lo` → `kamu`: 7.361
+- Penyesuaian `saya` → `aku` pada dialog akrab: 7.176
+- Penyesuaian `anda` → `kamu` pada dialog akrab: 7
 
-Penyesuaian `saya/Anda` terjadi pada dialog yang memakai slang agar pasangan kata ganti tetap konsisten. Tahap 2 ini masih bersifat sementara sampai audit manual tahap 1 selesai; setelah itu hasilnya akan dijalankan ulang pada daftar yang sudah final.
+Aturan register sudah diperbaiki: percakapan yang memakai gaya akrab (aku/kamu atau slang) diseragamkan ke pasangan `aku-kamu`; percakapan formal yang memakai `saya-Anda` tetap dipertahankan. Pemeriksaan akhir menunjukkan tidak ada sisa kata ganti slang yang ditargetkan. Tahap 2 mekanis selesai, tetapi sampel hasilnya tetap perlu diperiksa secara wajar saat audit mutu Tahap 3.
 
 ### Tahap 3 — Pemeriksaan mutu mekanis
 
 | Hasil | Jumlah |
 |---|---:|
-| Percakapan dengan tanda masalah mekanis | 8.735 |
-| Tidak ada masalah mekanis yang terdeteksi | 38.074 |
+| Percakapan dengan tanda masalah mekanis | 8.460 |
+| Tidak ada masalah mekanis yang terdeteksi | 37.257 |
 
 Tanda masalah mencakup struktur giliran, kata berulang, placeholder, terlalu banyak giliran, kata rusak, pesan terlalu pendek, dan teks mencurigakan.
 
-Tidak adanya tanda mekanis **bukan** bukti bahwa percakapan sudah bagus. Seluruh 46.809 contoh tetap membutuhkan pemeriksaan makna, relevansi, kewajaran, dan ketepatan fakta.
+Tidak adanya tanda mekanis **bukan** bukti bahwa percakapan sudah bagus. Seluruh 45.717 contoh tetap membutuhkan pemeriksaan makna, relevansi, kewajaran, dan ketepatan fakta.
 
 Audit mutu manual percontohan:
 - 20 percakapan diperiksa.
@@ -75,8 +75,8 @@ Audit mutu ini masih percontohan dan belum menjadi hasil akhir korpus.
 
 - Pemrosesan otomatis penuh selesai dan GitHub Actions berhasil.
 - Tahap 1 otomatis dan audit manual telah selesai; seluruh 1.680 ID unik sudah diputuskan.
-- Tahap 2 sudah berjalan secara mekanis, tetapi akan diulang setelah keputusan tahap 1 final.
-- Tahap 3 baru dimulai pada batch percontohan; pemeriksaan semantik menyeluruh belum selesai.
+- Tahap 2 sudah dijalankan ulang setelah keputusan manual Tahap 1 final; sisa slang target: 0.
+- Pemindaian mekanis Tahap 3 selesai pada 45.717 percakapan; audit semantik manual menyeluruh masih belum selesai.
 - Semua keluaran tetap `training_ready=false`. Belum ada data yang disetujui untuk training.
 - Persona asisten yang memiliki keluarga, pekerjaan, hewan, tubuh, barang, rutinitas, selera, dan pengalaman pribadi tetap diperbolehkan.
 
@@ -110,6 +110,6 @@ Rincian batch kedua belas: 362 ID baru diperiksa; 223 dipertahankan dan 139 dike
 - Audit manual Tahap 1: **1.680/1.680 ID unik (100%)**.
 - Antrean campuran tersisa: **0**; antrean ambigu saja tersisa: **0**.
 - Keputusan kumulatif: **588 dipertahankan** dan **1.092 dikeluarkan**.
-- Tahap 2 siap dijalankan ulang pada daftar final hasil Tahap 1.
-- Tahap 3 masih memerlukan audit semantik menyeluruh dan perbaikan percakapan.
+- Tahap 2 telah dijalankan ulang pada daftar final hasil Tahap 1; tidak ada sisa gue/gua/gw/lo/lu/elo/elu.
+- Tahap 3 sudah menandai 8.460 percakapan untuk pemeriksaan manusia; 37.257 lainnya tidak memiliki masalah mekanis yang terdeteksi, tetapi tetap belum disetujui secara makna.
 - Seluruh keluaran tetap `training_ready=false`; belum ada data yang disetujui untuk training.
