@@ -299,3 +299,19 @@ class Stage1ManualBatchTests(unittest.TestCase):
             self.assertEqual(report["manual_audit_exclude"], 1)
             self.assertEqual(report["stage1_in_scope"], 2)
             self.assertEqual(report["excluded_digital"], 2)
+
+
+    def test_formal_saya_anda_register_is_preserved(self):
+        from curate_intisari_v4_staged import replace_words
+        text, changes = replace_words("Saya senang bertemu dengan Anda.")
+        self.assertEqual(text, "Saya senang bertemu dengan Anda.")
+        self.assertEqual(changes, [])
+
+    def test_saya_anda_are_normalized_only_inside_casual_dialogue(self):
+        from curate_intisari_v4_staged import replace_words
+        text, changes = replace_words(
+            "Aku senang bertemu dengan kamu. Saya juga senang, Anda datang.",
+            casual_register=True,
+        )
+        self.assertEqual(text, "Aku senang bertemu dengan kamu. Aku juga senang, kamu datang.")
+        self.assertEqual(len(changes), 2)
