@@ -162,3 +162,19 @@ class ThreeStageCurationTests(unittest.TestCase):
         from curate_intisari_v4_staged import DIGITAL_RE
         text="Aku mau belanja online di online shop."
         self.assertTrue(DIGITAL_RE["digital_services"].search(text))
+
+
+    def test_single_youtube_mention_in_offline_sports_dialogue_is_reviewed(self):
+        from curate_intisari_v4_staged import stage1
+        import json, tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            src=root/"source.jsonl"
+            src.write_text(json.dumps({"messages":[
+                {"role":"user","content":"Aku ingin meningkatkan kemampuan bermain futsal."},
+                {"role":"assistant","content":"Kamu bisa berlatih rutin dan melihat satu video tutorial di YouTube."}
+            ]},ensure_ascii=False)+"\n",encoding="utf-8")
+            report=stage1(src,root)
+            self.assertEqual(report["excluded_digital"],0)
+            self.assertEqual(report["mixed_offline_context_records_kept_for_review"],1)
