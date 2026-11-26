@@ -88,3 +88,51 @@ class IntisariCurationTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ThreeStageCurationTests(unittest.TestCase):
+    def test_offline_market_and_mall_are_not_excluded(self):
+        from curate_intisari_v4_staged import DIGITAL_RE
+        text = "Aku pergi ke pasar dan mal untuk membeli baju."
+        self.assertFalse(any(pattern.search(text) for pattern in DIGITAL_RE.values()))
+
+    def test_clear_social_media_topic_is_excluded(self):
+        from curate_intisari_v4_staged import DIGITAL_RE
+        text = "Aku tidak bisa masuk ke akun media sosial."
+        self.assertTrue(DIGITAL_RE["social_media"].search(text))
+
+    def test_gue_lo_are_changed_to_aku_kamu(self):
+        from curate_intisari_v4_staged import replace_words
+        text, changes = replace_words("Gue suka makanan ini, kalau lo?")
+        self.assertEqual(text, "Aku suka makanan ini, kalau kamu?")
+        self.assertEqual(len(changes), 2)
+
+    def test_persona_experience_is_not_a_stage3_flag(self):
+        from curate_intisari_v4_staged import stage3
+        import json, tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            src=root/"in.jsonl"
+            src.write_text(json.dumps({"id":"x","messages":[
+                {"role":"user","content":"Kamu pernah ke pantai bersama keluarga?"},
+                {"role":"assistant","content":"Pernah, aku pergi bersama adikku bulan lalu."}
+            ]},ensure_ascii=False)+"\\n",encoding="utf-8")
+            report=stage3(src,root)
+            self.assertEqual(report["needs_human_review"],0)
+            self.assertEqual(report["no_obvious_mechanical_issue_not_semantically_approved"],1)
+
+    def test_stage3_flags_bad_turn_structure(self):
+        from curate_intisari_v4_staged import stage3
+        import json, tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            src=root/"in.jsonl"
+            src.write_text(json.dumps({"id":"x","messages":[
+                {"role":"user","content":"Aku mau bertanya."},
+                {"role":"user","content":"Tentang makanan."},
+                {"role":"assistant","content":"Silakan bertanya."}
+            ]},ensure_ascii=False)+"\\n",encoding="utf-8")
+            report=stage3(src,root)
+            self.assertEqual(report["needs_human_review"],1)
