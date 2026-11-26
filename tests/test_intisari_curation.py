@@ -262,3 +262,40 @@ class Stage1ManualBatchTests(unittest.TestCase):
         self.assertEqual(progress["stage1_mixed_remaining"], 0)
         self.assertEqual(progress["stage1_ambiguous_only_remaining"], 0)
         self.assertEqual(progress["stage1_unique_decisions"], {"keep_in_scope": 588, "exclude_digital_topic": 1092})
+
+
+    def test_manual_stage1_decisions_are_applied_before_stage2(self):
+        import json
+        import tempfile
+        from pathlib import Path
+        from curate_intisari_v4_staged import apply_manual_stage1_decisions
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            manual = root / "manual"
+            manual.mkdir()
+            (root / "stage1_in_scope.jsonl").write_text(
+                json.dumps({"id": "a", "messages": []}) + "\\n" +
+                json.dumps({"id": "b", "messages": []}) + "\\n" +
+                json.dumps({"id": "c", "messages": []}) + "\\n",
+                encoding="utf-8",
+            )
+            (root / "stage1_excluded_digital.jsonl").write_text(
+                json.dumps({"id": "z", "messages": []}) + "\\n",
+                encoding="utf-8",
+            )
+            (manual / "stage1_manual_audit_batch1_2.jsonl").write_text(
+                json.dumps({"id": "a", "decision": "keep_in_scope"}) + "\\n" +
+                json.dumps({"id": "b", "decision": "exclude_digital_topic"}) + "\\n",
+                encoding="utf-8",
+            )
+            report = apply_manual_stage1_decisions(root, manual, {"stage1_in_scope": 3, "excluded_digital": 1})
+            kept = [json.loads(line) for line in (root / "stage1_in_scope.jsonl").read_text(encoding="utf-8").splitlines()]
+            excluded = [json.loads(line) for line in (root / "stage1_excluded_digital.jsonl").read_text(encoding="utf-8").splitlines()]
+            self.assertEqual({item["id"] for item in kept}, {"a", "c"})
+            self.assertEqual({item["id"] for item in excluded}, {"z", "b"})
+            self.assertEqual(report["manual_audit_unique_ids"], 2)
+            self.assertEqual(report["manual_audit_keep"], 1)
+            self.assertEqual(report["manual_audit_exclude"], 1)
+            self.assertEqual(report["stage1_in_scope"], 2)
+            self.assertEqual(report["excluded_digital"], 2)
