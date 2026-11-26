@@ -24,7 +24,7 @@ DIGITAL_PATTERNS = {
 }
 DIGITAL_RE = {k: re.compile(v, re.I) for k,v in DIGITAL_PATTERNS.items()}
 OFFLINE_CONTEXT_RE = re.compile(
-    r"\b(?:pasar|supermarket|mal|mall|toko|warung|belanja|berbelanja|masak|memasak|makanan|masakan|sayur|ayam|baju|pakaian|kebun|sawah|kucing|anjing|hujan|cuaca|rapat|sekolah|kampus|kantor|perjalanan|kereta|krl)\b",
+    r"\b(?:pasar|supermarket|mal|mall|toko|warung|belanja|berbelanja|masak|memasak|makanan|masakan|sayur|ayam|baju|pakaian|kebun|sawah|kucing|anjing|hujan|cuaca|rapat|sekolah|kampus|kantor|perjalanan|kereta|krl|olahraga|futsal|badminton|sepak bola|voli|latihan)\b",
     re.I,
 )
 
