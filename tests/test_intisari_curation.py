@@ -178,3 +178,19 @@ class ThreeStageCurationTests(unittest.TestCase):
             report=stage1(src,root)
             self.assertEqual(report["excluded_digital"],0)
             self.assertEqual(report["mixed_offline_context_records_kept_for_review"],1)
+
+
+    def test_mall_and_online_shop_comparison_is_mixed_review(self):
+        from curate_intisari_v4_staged import stage1
+        import json, tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            src=root/"source.jsonl"
+            src.write_text(json.dumps({"messages":[
+                {"role":"user","content":"Aku mau belanja di mall atau online shop."},
+                {"role":"assistant","content":"Mall bisa melihat barang langsung, online shop lebih praktis."}
+            ]},ensure_ascii=False)+"\n",encoding="utf-8")
+            report=stage1(src,root)
+            self.assertEqual(report["excluded_digital"],0)
+            self.assertEqual(report["mixed_offline_context_records_kept_for_review"],1)
