@@ -63,6 +63,28 @@ class IntisariCurationTests(unittest.TestCase):
         ]}
         self.assertIn("pengulangan_kata", inspect_conversation(item))
 
+    def test_assistant_persona_body_job_family_and_pet_are_allowed(self):
+        item = {"messages": [
+            {"role": "user", "content": "Kamu bekerja di mana sekarang?"},
+            {"role": "assistant", "content": "Aku bekerja di kebun milik keluargaku."},
+            {"role": "user", "content": "Di rumah ada hewan peliharaan?"},
+            {"role": "assistant", "content": "Ada, aku memelihara seekor kucing bernama Miko."},
+        ]}
+        reasons = inspect_conversation(item)
+        self.assertNotIn("persona_pribadi", reasons)
+        self.assertNotIn("pengalaman_pribadi", reasons)
+        self.assertEqual(reasons, [])
+
+    def test_assistant_personal_experience_is_not_an_automatic_error(self):
+        item = {"messages": [
+            {"role": "user", "content": "Kamu pernah pergi ke pantai?"},
+            {"role": "assistant", "content": "Pernah, aku pergi bersama adikku bulan lalu."},
+        ]}
+        reasons = inspect_conversation(item)
+        self.assertNotIn("persona_pribadi", reasons)
+        self.assertNotIn("pengalaman_pribadi", reasons)
+        self.assertEqual(reasons, [])
+
 
 if __name__ == "__main__":
     unittest.main()
