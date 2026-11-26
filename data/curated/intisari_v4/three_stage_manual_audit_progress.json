@@ -2,8 +2,8 @@
   "source": "INTISARI/intisari-indonesian-chat-v4",
   "source_records": 50047,
   "stage1_mixed_queue_total": 1427,
-  "stage1_manual_reviewed": 318,
-  "stage1_manual_remaining": 1109,
+  "stage1_manual_reviewed": 1318,
+  "stage1_manual_remaining": 109,
   "stage1_batches": [
     {
       "batch": "batch1",
@@ -95,6 +95,16 @@
       "keep_in_scope": 37,
       "exclude_digital_topic": 63,
       "duplicate_ids": 0
+    },
+    {
+      "batch": "batch11",
+      "file": "data/curated/intisari_v4/stage1_manual_audit_batch11_1000.jsonl",
+      "report": "docs/INTISARI_V4_STAGE1_MANUAL_AUDIT_BATCH11.md",
+      "reviewed": 1000,
+      "unique_ids": 1000,
+      "keep_in_scope": 240,
+      "exclude_digital_topic": 760,
+      "duplicate_ids": 0
     }
   ],
   "stage3_manual_pilot": {
@@ -107,19 +117,19 @@
     "status": "provisional_only_not_final_until_stage1_and_stage2_complete"
   },
   "training_ready": false,
-  "stage1_mixed_remaining": 1109,
-  "stage1_unique_manual_reviewed": 318,
-  "stage1_unique_manual_review_remaining": 1362,
+  "stage1_mixed_remaining": 109,
+  "stage1_unique_manual_reviewed": 1318,
+  "stage1_unique_manual_review_remaining": 362,
   "stage2_status": "provisional_mechanical_run_pending_stage1_manual_completion",
   "stage3_status": "pilot_only_pending_stage1_and_stage2_final",
-  "stage1_manual_rows_recorded": 325,
+  "stage1_manual_rows_recorded": 1325,
   "stage1_ambiguous_only_remaining": 253,
   "stage1_manual_duplicate_rows": 7,
   "stage1_unique_decisions": {
-    "keep_in_scope": 125,
-    "exclude_digital_topic": 193
+    "keep_in_scope": 365,
+    "exclude_digital_topic": 953
   },
   "stage1_manual_batch_size": 1000,
-  "stage1_next_batch_target": 1000,
-  "stage1_next_batch_note": "Batch berikutnya menargetkan 1.000 ID baru dari antrean campuran. Untuk menjaga ketelitian, pemeriksaan dapat dilakukan dalam 10 subkelompok internal masing-masing 100 ID, lalu digabung sebagai satu batch resmi. Tidak ada ID yang dihitung selesai sebelum seluruh 1.000 ID benar-benar diperiksa."
+  "stage1_next_batch_target": 362,
+  "stage1_next_batch_note": "Batch 11 selesai dengan 1.000 ID baru. Batch 12 adalah batch terakhir Tahap 1 dan mencakup seluruh sisa 362 ID unik: 109 antrean campuran dan 253 antrean ambigu saja."
 }
