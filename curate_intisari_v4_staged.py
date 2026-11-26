@@ -23,6 +23,11 @@ DIGITAL_PATTERNS = {
     "digital_presentation": r"\b(?:slide presentasi|presentasi digital|powerpoint|kode html)\b",
 }
 DIGITAL_RE = {k: re.compile(v, re.I) for k,v in DIGITAL_PATTERNS.items()}
+OFFLINE_CONTEXT_RE = re.compile(
+    r"\\b(?:pasar|supermarket|mal|mall|toko|warung|belanja|berbelanja|masak|memasak|makanan|masakan|sayur|ayam|baju|pakaian|kebun|sawah|kucing|anjing|hujan|cuaca|rapat|sekolah|kampus|kantor|perjalanan|kereta|krl)\\b",
+    re.I,
+)
+
 # These terms can occur in ordinary offline life; they are reviewed, never auto-excluded.
 AMBIGUOUS_PATTERNS = {
     "presentasi": re.compile(r"\b(?:presentasi|slide)\b", re.I),
@@ -62,7 +67,7 @@ def write_jsonl(path: Path, records):
             f.write(json.dumps(x,ensure_ascii=False)+"\n")
 
 def stage1(input_path: Path, out: Path):
-    in_scope=[]; excluded=[]; ambiguous=[]; malformed=0; categories=collections.Counter()
+    in_scope=[]; excluded=[]; ambiguous=[]; mixed=[]; malformed=0; categories=collections.Counter()
     for line_no,item in load_jsonl(input_path):
         if item is None:
             malformed+=1; continue
