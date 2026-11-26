@@ -44,10 +44,13 @@
     "report": "docs/INTISARI_V4_STAGE3_MANUAL_AUDIT_BATCH1.md",
     "rewrite": 13,
     "discard": 4,
-    "discard_structure": 3
+    "discard_structure": 3,
+    "status": "provisional_only_not_final_until_stage1_and_stage2_complete"
   },
   "training_ready": false,
   "stage1_mixed_remaining": 1327,
   "stage1_unique_manual_reviewed": 100,
-  "stage1_unique_manual_review_remaining": 1580
+  "stage1_unique_manual_review_remaining": 1580,
+  "stage2_status": "provisional_mechanical_run_pending_stage1_manual_completion",
+  "stage3_status": "pilot_only_pending_stage1_and_stage2_final"
 }
