@@ -73,14 +73,25 @@ def stage1(input_path: Path, out: Path):
             malformed+=1; continue
         msgs=messages_of(item); joined=text_of(msgs)
         hits=[name for name,pat in DIGITAL_RE.items() if pat.search(joined)]
+        # A single incidental internet/web mention inside a clearly offline conversation
+        # is not enough to discard the whole dialogue; retain it for manual context review.
+        mixed_context=(
+            hits == ["internet_web"]
+            and len(DIGITAL_RE["internet_web"].findall(joined)) == 1
+            and bool(OFFLINE_CONTEXT_RE.search(joined))
+        )
         amb=[name for name,pat in AMBIGUOUS_PATTERNS.items() if pat.search(joined)]
         rec={"id":f"intisari-v4-{line_no:06d}","source_line":line_no,"messages":msgs}
-        if hits:
+        if hits and not mixed_context:
             rec["stage1_decision"]="exclude_digital_topic"
             rec["stage1_reasons"]=hits
             excluded.append(rec); categories.update(hits)
         else:
             rec["stage1_decision"]="in_scope_pending_quality_review"
+            if hits and mixed_context:
+                rec["stage1_decision"]="mixed_offline_context_needs_review"
+                rec["stage1_mixed_digital_reasons"]=hits
+                mixed.append({"id":rec["id"],"reasons":hits,"messages":msgs})
             if amb:
                 rec["stage1_ambiguous_terms"]=amb
                 ambiguous.append({"id":rec["id"],"terms":amb,"messages":msgs})
@@ -88,9 +99,11 @@ def stage1(input_path: Path, out: Path):
     write_jsonl(out/"stage1_in_scope.jsonl",in_scope)
     write_jsonl(out/"stage1_excluded_digital.jsonl",excluded)
     write_jsonl(out/"stage1_ambiguous_review.jsonl",ambiguous)
+    write_jsonl(out/"stage1_mixed_context_review.jsonl",mixed)
     return {"source_records":len(in_scope)+len(excluded),"malformed_lines":malformed,
             "stage1_in_scope":len(in_scope),"excluded_digital":len(excluded),
             "ambiguous_records_also_kept_in_scope":len(ambiguous),
+            "mixed_offline_context_records_kept_for_review":len(mixed),
             "exclusion_reason_counts":dict(categories.most_common()),
             "training_ready":False}
 
